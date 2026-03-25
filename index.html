@@ -300,6 +300,262 @@
             cursor: pointer;
         }
 
+        /* Sidebar upload button */
+        .sidebar-upload {
+            padding: 12px 16px;
+            margin-top: auto;
+            border-top: 1px solid #334155;
+        }
+
+        .sidebar-upload button {
+            width: 100%;
+            padding: 8px 0;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .sidebar-upload button:hover {
+            background: #2563eb;
+        }
+
+        /* Upload panel */
+        .upload-panel {
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .upload-panel h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+            color: #64748b;
+        }
+
+        .drop-zone.drag-over {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .drop-zone .drop-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .drop-zone p {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .drop-zone input[type=file] {
+            display: none;
+        }
+
+        .drop-zone .browse-btn {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #3b82f6;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .upload-progress {
+            display: none;
+        }
+
+        .progress-bar-upload {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar-upload-fill {
+            height: 100%;
+            background: #3b82f6;
+            width: 0%;
+            transition: width 0.2s;
+        }
+
+        .upload-status {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        .upload-error {
+            color: #ef4444;
+            font-size: 13px;
+            padding: 10px 14px;
+            background: #fef2f2;
+            border-radius: 6px;
+            display: none;
+        }
+
+        /* Segment review panel */
+        .review-panel {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .review-header h2 {
+            font-size: 17px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            padding: 6px 14px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn-secondary:hover { background: #e2e8f0; }
+
+        .btn-primary {
+            padding: 6px 14px;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn-primary:hover { background: #2563eb; }
+
+        .btn-danger {
+            padding: 4px 10px;
+            background: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-danger:hover { background: #fee2e2; }
+
+        .segment-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .segment-table th {
+            text-align: left;
+            padding: 8px 10px;
+            background: #f8fafc;
+            border-bottom: 2px solid #e2e8f0;
+            color: #64748b;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .segment-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .segment-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        .seg-label {
+            font-weight: 600;
+            color: #3b82f6;
+            min-width: 52px;
+        }
+
+        .seg-duration {
+            color: #64748b;
+            white-space: nowrap;
+        }
+
+        .seg-duration.short { color: #f59e0b; }
+
+        .seg-actions {
+            display: flex;
+            gap: 4px;
+            flex-wrap: nowrap;
+        }
+
+        .btn-tiny {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            white-space: nowrap;
+        }
+
+        .btn-tiny:hover { background: #e2e8f0; }
+
+        .btn-tiny.play { color: #3b82f6; }
+        .btn-tiny.merge { color: #10b981; }
+        .btn-tiny.split { color: #f59e0b; }
+        .btn-tiny.del { color: #ef4444; }
+
+        .finalize-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .finalize-status {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .git-push-btn {
+            display: none;
+        }
+
         /* Seek buttons (hidden on desktop, shown on mobile) */
         .seek-btn {
             display: none;
@@ -388,6 +644,9 @@
 <body>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-title">Tests</div>
+        <div class="sidebar-upload" id="sidebarUpload" style="display:none">
+            <button id="addTestBtn">+ Add Test</button>
+        </div>
     </aside>
 
     <div class="main">
@@ -548,6 +807,7 @@
 
             loadManifest();
             loadScripts();
+            checkServerMode();
         }
 
         function loadScripts() {
@@ -884,6 +1144,437 @@
                 state.currentQuestion = -1;
                 highlightActiveButton();
             }
+        }
+
+        // ── Server mode detection ─────────────────────────────────────────────
+        function checkServerMode() {
+            fetch("/api/health")
+                .then(function(res) { return res.ok ? res.json() : null; })
+                .then(function(data) {
+                    if (data && data.ok) {
+                        var btn = document.getElementById("sidebarUpload");
+                        if (btn) btn.style.display = "block";
+                        document.getElementById("addTestBtn").addEventListener("click", showUploadPanel);
+                    }
+                })
+                .catch(function() {});
+        }
+
+        // ── Upload panel ──────────────────────────────────────────────────────
+        var reviewState = null;
+        var previewAudio = new Audio();
+
+        function showUploadPanel() {
+            state.audio.pause();
+            content.innerHTML = "";
+
+            var panel = document.createElement("div");
+            panel.className = "upload-panel";
+            panel.innerHTML =
+                '<h2>Add New Test</h2>' +
+                '<div class="drop-zone" id="dropZone">' +
+                  '<div class="drop-icon">&#127925;</div>' +
+                  '<p>Drag &amp; drop an MP3 file here</p>' +
+                  '<label class="browse-btn">Choose File' +
+                    '<input type="file" id="fileInput" accept=".mp3">' +
+                  '</label>' +
+                '</div>' +
+                '<div class="upload-progress" id="uploadProgress">' +
+                  '<div class="upload-status" id="uploadStatus">Uploading...</div>' +
+                  '<div class="progress-bar-upload"><div class="progress-bar-upload-fill" id="uploadFill"></div></div>' +
+                '</div>' +
+                '<div class="upload-error" id="uploadError"></div>' +
+                '<button class="btn-secondary" id="cancelUploadBtn" style="align-self:flex-start">Cancel</button>';
+            content.appendChild(panel);
+
+            document.getElementById("cancelUploadBtn").addEventListener("click", showPlayerView);
+
+            var dropZone = document.getElementById("dropZone");
+            var fileInput = document.getElementById("fileInput");
+
+            dropZone.addEventListener("dragover", function(e) {
+                e.preventDefault();
+                dropZone.classList.add("drag-over");
+            });
+            dropZone.addEventListener("dragleave", function() {
+                dropZone.classList.remove("drag-over");
+            });
+            dropZone.addEventListener("drop", function(e) {
+                e.preventDefault();
+                dropZone.classList.remove("drag-over");
+                var file = e.dataTransfer.files[0];
+                if (file) startUpload(file);
+            });
+            fileInput.addEventListener("change", function() {
+                if (fileInput.files[0]) startUpload(fileInput.files[0]);
+            });
+        }
+
+        function startUpload(file) {
+            if (!file.name.toLowerCase().endsWith(".mp3")) {
+                showUploadError("Only MP3 files are supported.");
+                return;
+            }
+            document.getElementById("uploadProgress").style.display = "block";
+            document.getElementById("dropZone").style.display = "none";
+            document.getElementById("uploadError").style.display = "none";
+            document.getElementById("uploadStatus").textContent = "Uploading " + file.name + "...";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/upload");
+
+            xhr.upload.addEventListener("progress", function(e) {
+                if (e.lengthComputable) {
+                    var pct = Math.round(e.loaded / e.total * 100);
+                    document.getElementById("uploadFill").style.width = pct + "%";
+                    document.getElementById("uploadStatus").textContent =
+                        "Uploading... " + pct + "%";
+                }
+            });
+
+            xhr.addEventListener("load", function() {
+                if (xhr.status === 200) {
+                    document.getElementById("uploadFill").style.width = "100%";
+                    document.getElementById("uploadStatus").textContent = "Splitting audio...";
+                    var data = JSON.parse(xhr.responseText);
+                    showReviewPanel(data);
+                } else {
+                    var err = "Upload failed.";
+                    try { err = JSON.parse(xhr.responseText).error || err; } catch(e) {}
+                    showUploadError(err);
+                }
+            });
+
+            xhr.addEventListener("error", function() {
+                showUploadError("Network error. Is the server running?");
+            });
+
+            var formData = new FormData();
+            formData.append("file", file);
+            xhr.send(formData);
+        }
+
+        function showUploadError(msg) {
+            var el = document.getElementById("uploadError");
+            if (el) { el.textContent = msg; el.style.display = "block"; }
+            var prog = document.getElementById("uploadProgress");
+            if (prog) prog.style.display = "none";
+            var dz = document.getElementById("dropZone");
+            if (dz) dz.style.display = "block";
+        }
+
+        // ── Segment review ────────────────────────────────────────────────────
+        function showReviewPanel(data) {
+            reviewState = {
+                sessionId: data.session_id,
+                testName: data.test_name,
+                rows: data.segments.map(function(seg, i) {
+                    return {
+                        indices: [seg.index],
+                        label: String(i + 1).padStart(2, "0"),
+                        durationMs: seg.duration_ms,
+                        filename: seg.filename
+                    };
+                })
+            };
+            renumberLabels();
+            renderReview();
+        }
+
+        function renderReview() {
+            content.innerHTML = "";
+            var panel = document.createElement("div");
+            panel.className = "review-panel";
+
+            // Header
+            var header = document.createElement("div");
+            header.className = "review-header";
+            header.innerHTML =
+                '<h2>Review Segments &mdash; ' + escapeHtml(reviewState.testName) +
+                ' (' + reviewState.rows.length + ' segments)</h2>';
+
+            var actions = document.createElement("div");
+            actions.className = "review-actions";
+
+            var autoBtn = document.createElement("button");
+            autoBtn.className = "btn-secondary";
+            autoBtn.textContent = "Auto-detect pairs";
+            autoBtn.title = "Automatically merge short segments at the end into pairs (for 37-38, 39-40 pattern)";
+            autoBtn.addEventListener("click", autoDetectPairs);
+            actions.appendChild(autoBtn);
+
+            var cancelBtn = document.createElement("button");
+            cancelBtn.className = "btn-secondary";
+            cancelBtn.textContent = "Cancel";
+            cancelBtn.addEventListener("click", function() {
+                fetch("/api/session/" + reviewState.sessionId, {method: "DELETE"}).catch(function(){});
+                showPlayerView();
+            });
+            actions.appendChild(cancelBtn);
+
+            header.appendChild(actions);
+            panel.appendChild(header);
+
+            // Table
+            var table = document.createElement("table");
+            table.className = "segment-table";
+            table.innerHTML =
+                '<thead><tr>' +
+                '<th>#</th><th>Label</th><th>Duration</th><th>Preview</th><th>Actions</th>' +
+                '</tr></thead>';
+            var tbody = document.createElement("tbody");
+
+            reviewState.rows.forEach(function(row, i) {
+                var tr = document.createElement("tr");
+
+                var numTd = document.createElement("td");
+                numTd.textContent = i + 1;
+                numTd.style.color = "#94a3b8";
+
+                var labelTd = document.createElement("td");
+                labelTd.className = "seg-label";
+                labelTd.textContent = row.label;
+
+                var durTd = document.createElement("td");
+                durTd.className = "seg-duration" + (row.durationMs < 5000 ? " short" : "");
+                durTd.textContent = (row.durationMs / 1000).toFixed(1) + "s";
+
+                var previewTd = document.createElement("td");
+                var playBtn = document.createElement("button");
+                playBtn.className = "btn-tiny play";
+                playBtn.textContent = "▶ Play";
+                (function(r) {
+                    playBtn.addEventListener("click", function() {
+                        previewSegment(r);
+                    });
+                })(row);
+                previewTd.appendChild(playBtn);
+
+                var actionsTd = document.createElement("td");
+                actionsTd.className = "seg-actions";
+
+                if (i < reviewState.rows.length - 1) {
+                    var mergeBtn = document.createElement("button");
+                    mergeBtn.className = "btn-tiny merge";
+                    mergeBtn.textContent = "Merge ▼";
+                    (function(idx) {
+                        mergeBtn.addEventListener("click", function() { mergeDown(idx); });
+                    })(i);
+                    actionsTd.appendChild(mergeBtn);
+                }
+
+                if (row.indices.length > 1) {
+                    var splitBtn = document.createElement("button");
+                    splitBtn.className = "btn-tiny split";
+                    splitBtn.textContent = "Split";
+                    (function(idx) {
+                        splitBtn.addEventListener("click", function() { splitRow(idx); });
+                    })(i);
+                    actionsTd.appendChild(splitBtn);
+                }
+
+                var delBtn = document.createElement("button");
+                delBtn.className = "btn-tiny del";
+                delBtn.textContent = "Delete";
+                (function(idx) {
+                    delBtn.addEventListener("click", function() { deleteRow(idx); });
+                })(i);
+                actionsTd.appendChild(delBtn);
+
+                tr.appendChild(numTd);
+                tr.appendChild(labelTd);
+                tr.appendChild(durTd);
+                tr.appendChild(previewTd);
+                tr.appendChild(actionsTd);
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody);
+            panel.appendChild(table);
+
+            // Finalize row
+            var finalizeRow = document.createElement("div");
+            finalizeRow.className = "finalize-row";
+
+            var finalizeBtn = document.createElement("button");
+            finalizeBtn.className = "btn-primary";
+            finalizeBtn.textContent = "Finalize & Save";
+            finalizeBtn.addEventListener("click", finalizeSegments);
+
+            var statusEl = document.createElement("span");
+            statusEl.className = "finalize-status";
+            statusEl.id = "finalizeStatus";
+
+            finalizeRow.appendChild(finalizeBtn);
+            finalizeRow.appendChild(statusEl);
+            panel.appendChild(finalizeRow);
+            content.appendChild(panel);
+        }
+
+        function previewSegment(row) {
+            var firstFilename = row.filename || (row.indices[0] + 1 + "").padStart(3, "0") + ".mp3";
+            previewAudio.src = "/tmp/" + reviewState.sessionId + "/raw/" + firstFilename;
+            previewAudio.play().catch(function() {});
+        }
+
+        function mergeDown(i) {
+            var a = reviewState.rows[i];
+            var b = reviewState.rows[i + 1];
+            var merged = {
+                indices: a.indices.concat(b.indices),
+                label: a.label,
+                durationMs: a.durationMs + b.durationMs,
+                filename: a.filename
+            };
+            reviewState.rows.splice(i, 2, merged);
+            renumberLabels();
+            renderReview();
+        }
+
+        function splitRow(i) {
+            var row = reviewState.rows[i];
+            if (row.indices.length < 2) return;
+            // Get original segment info from the upload response stored per-index
+            var newRows = row.indices.map(function(idx) {
+                return {
+                    indices: [idx],
+                    label: "",
+                    durationMs: 0,
+                    filename: String(idx + 1).padStart(3, "0") + ".mp3"
+                };
+            });
+            reviewState.rows.splice.apply(reviewState.rows, [i, 1].concat(newRows));
+            renumberLabels();
+            renderReview();
+        }
+
+        function deleteRow(i) {
+            reviewState.rows.splice(i, 1);
+            renumberLabels();
+            renderReview();
+        }
+
+        function autoDetectPairs() {
+            // Find short segments (<6s) at the tail and pair them up
+            var rows = reviewState.rows;
+            var threshold = 6000;
+            // Work from the end
+            var i = rows.length - 1;
+            while (i > 0) {
+                if (rows[i].durationMs < threshold && rows[i - 1].durationMs < threshold) {
+                    mergeDown(i - 1);
+                    i = reviewState.rows.length - 1; // restart scan
+                } else {
+                    i--;
+                }
+            }
+        }
+
+        function renumberLabels() {
+            var num = 1;
+            reviewState.rows.forEach(function(row) {
+                if (row.indices.length === 1) {
+                    row.label = String(num).padStart(2, "0");
+                    num++;
+                } else {
+                    var start = num;
+                    var end = num + row.indices.length - 1;
+                    row.label = start + "-" + end;
+                    num = end + 1;
+                }
+            });
+        }
+
+        function finalizeSegments() {
+            var statusEl = document.getElementById("finalizeStatus");
+            if (statusEl) statusEl.textContent = "Saving...";
+
+            var payload = {
+                session_id: reviewState.sessionId,
+                test_name: reviewState.testName,
+                segments: reviewState.rows.map(function(row) {
+                    return { indices: row.indices, label: row.label };
+                })
+            };
+
+            fetch("/api/finalize", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.ok) {
+                    if (statusEl) statusEl.textContent = "Saved! (" + data.file_count + " files)";
+                    // Refresh manifest and go to player
+                    loadManifest();
+                    setTimeout(function() {
+                        showPlayerView();
+                        showGitPushPrompt(data.test_name);
+                    }, 800);
+                } else {
+                    if (statusEl) statusEl.textContent = "Error: " + (data.error || "Unknown error");
+                }
+            })
+            .catch(function() {
+                if (statusEl) statusEl.textContent = "Network error.";
+            });
+        }
+
+        function showGitPushPrompt(testName) {
+            // Show a small toast/banner asking to push
+            var banner = document.createElement("div");
+            banner.style.cssText =
+                "position:fixed;bottom:80px;right:20px;background:#1e293b;color:#fff;" +
+                "padding:14px 18px;border-radius:10px;font-size:13px;z-index:100;" +
+                "box-shadow:0 4px 12px rgba(0,0,0,0.3);display:flex;gap:10px;align-items:center;";
+            banner.innerHTML =
+                '<span>' + escapeHtml(testName) + ' saved. Push to GitHub?</span>' +
+                '<button id="pushBtn" style="padding:5px 12px;background:#3b82f6;color:#fff;' +
+                'border:none;border-radius:5px;cursor:pointer;font-size:12px;">Push</button>' +
+                '<button id="dismissBanner" style="padding:5px 8px;background:transparent;' +
+                'color:#94a3b8;border:none;cursor:pointer;font-size:16px;">&#x2715;</button>';
+            document.body.appendChild(banner);
+
+            document.getElementById("dismissBanner").addEventListener("click", function() {
+                banner.remove();
+            });
+            document.getElementById("pushBtn").addEventListener("click", function() {
+                document.getElementById("pushBtn").textContent = "Pushing...";
+                document.getElementById("pushBtn").disabled = true;
+                fetch("/api/git-push", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({test_name: testName})
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    banner.innerHTML = '<span>' +
+                        escapeHtml(data.ok ? (data.message || "Pushed!") : ("Error: " + data.error)) +
+                        '</span>';
+                    setTimeout(function() { banner.remove(); }, 3000);
+                })
+                .catch(function() {
+                    banner.innerHTML = "<span>Push failed.</span>";
+                    setTimeout(function() { banner.remove(); }, 2000);
+                });
+            });
+
+            setTimeout(function() { if (banner.parentNode) banner.remove(); }, 15000);
+        }
+
+        function showPlayerView() {
+            previewAudio.pause();
+            reviewState = null;
+            renderQuestions();
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
         }
 
         // Start

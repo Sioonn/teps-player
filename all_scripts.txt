@@ -1,0 +1,381 @@
+Gemini의 응답
+요청하신 대로 첨부된 이미지들에 있는 영어 스크립트와 영어 선택지들만 추출하여 문제 번호 순서대로(4번~30번) 정리해 드립니다.
+
+4
+W: You're blocking the driveway, sir. Can you move your car?
+M: __________________________
+(a) I will. Thanks for the ride.
+(b) Sorry, I was just about to leave.
+(c) Sure. Just park it over there.
+(d) No problem. Thanks for moving it.
+
+5
+M: I think I need to lose weight.
+W: __________________________
+(a) It seems like you're in decent shape to me.
+(b) You do look like you've been dieting.
+(c) Well, try increasing your calorie intake.
+(d) Yeah, you're definitely slimmer.
+
+6
+W: Would you care for some dessert after your meal, sir?
+M: __________________________
+(a) It should be along any minute now.
+(b) Of course. Dessert was delicious.
+(c) No thanks. Just the check, please.
+(d) I actually enjoyed the appetizer.
+
+7
+M: You're a great guitarist! You must have taken years of lessons.
+W: __________________________
+(a) I guess I need a little more practice, then.
+(b) Right. I'm thinking of giving them a try.
+(c) Even so, I'd recommend getting a teacher.
+(d) I'm more or less self-taught, actually.
+
+8
+W: That shirt I bought yesterday is too small for me.
+M: __________________________
+(a) The clerk must've given you a larger one.
+(b) I told you to try it on before buying it.
+(c) It might shrink if you wash it, though.
+(d) Maybe your size wasn't in stock.
+
+9
+M: I never should've dumped my girlfriend.
+W: __________________________
+(a) You'll end up regretting it, though.
+(b) You should ask her to take you back.
+(c) Yeah, you nearly made a big mistake.
+(d) Come on. You don't have to apologize.
+
+10
+W: If you ask me, the company should let Mary go.
+M: __________________________
+(a) Yeah, she's made up for her mistakes.
+(b) I agree. She's indispensable to the team.
+(c) I'd second that. Her behavior's been inexcusable.
+(d) Right, she should think twice before accepting the job.
+
+11
+M: How do you know so much about Brazil?
+W: I worked there for a year.
+M: Really? When was that?
+W: __________________________
+(a) In a year or so.
+(b) For several weeks.
+(c) Every few months.
+(d) About three years ago.
+
+12
+W: You're late for work again.
+M: Sorry, I got a flat tire on the way.
+W: Didn't the same thing happen last week?
+M: __________________________
+(a) Well, I've been taking the train.
+(b) Actually, I need to get it repaired.
+(c) It was an engine issue that time.
+(d) I'll ask my mechanic tonight.
+
+13
+M: Want to play basketball after work?
+W: That sounds fun, but maybe next time.
+M: OK. Do you have other plans?
+W: __________________________
+(a) No, but I need some rest.
+(b) Yeah, but they were canceled.
+(c) None, so I'm thinking of joining.
+(d) I just don't like playing basketball.
+
+14
+W: Could you recommend a good science fiction movie for me to watch this weekend?
+M: How about Deep Castle, the latest one directed by Judy Brown?
+W: Is she the person who directed Life in Space?
+M: __________________________
+(a) Yeah, her movies are worth watching, except for Deep Castle.
+(b) You must have her confused with someone else.
+(c) I haven't heard of her, to be honest.
+(d) Actually, she usually directs science fiction movies.
+
+15
+M: We should renovate our kitchen.
+W: Why? We're going to move soon.
+M: It'll pay off when we sell the place.
+W: __________________________
+(a) I guess it does look better now.
+(b) Then focus on the kitchen instead.
+(c) Let's wait until we've sold the place, then.
+(d) I still don't think it's worth the effort.
+
+16
+W: Have you started looking for a new job?
+M: Actually, I've decided to work as a freelancer.
+W: Will your income from that be steady enough, though?
+M: __________________________
+(a) I hope to find enough regular clients to feel secure.
+(b) Not unless I pay more for freelancers.
+(c) Maybe, but that's no reason to quit my job.
+(d) I'd still rather avoid becoming a freelancer.
+
+17
+M: Are you still going hiking tomorrow?
+W: Of course. Why do you ask?
+M: Well, is it too late to join?
+W: __________________________
+(a) Actually, it was already canceled.
+(b) Not at all. The more the merrier.
+(c) No, I was waiting for your invitation.
+(d) Let me check if it's still on.
+
+18
+W: Do you think our offer on that house will be accepted?
+M: I don't know. We'll have to wait and see.
+W: What if somebody outbids us?
+M: __________________________
+(a) All we can do is keep our fingers crossed.
+(b) Then we'll accept the highest bid.
+(c) Let's just hope that's the case.
+(d) We can still back out if we want to.
+
+19
+M: Dave seemed annoyed by my comments in the meeting.
+W: Yeah, he seemed to take them really personally.
+M: Do you think I should apologize?
+W: __________________________
+(a) Maybe after giving him some time to cool off.
+(b) I'd advise against challenging him any further.
+(c) You're just reading too much into it.
+(d) Good luck getting him to express remorse.
+
+20
+W: I'm so grateful for all your help with fundraising.
+M: I'm just glad to support your charity drive.
+W: I don't know how you got so many donations.
+M: __________________________
+(a) They're bound to start trickling in.
+(b) There are many charities in need of funds.
+(c) I guess people thought it was a worthy cause.
+(d) I can't thank you enough for your generosity.
+
+21
+Listen to a telephone conversation.
+M: Hey, it's Mark calling. I'm on the way to your house, but I think I'm lost.
+W: What buildings do you see?
+M: There's a hospital on my right and a bank on my left.
+W: Is there a supermarket next to the bank?
+M: Yeah! Where should I go from here?
+W: Take a left at the corner after the supermarket.
+Q: What is the man mainly trying to do?
+(a) Find the name of the woman's neighborhood
+(b) Get directions to the supermarket
+(c) Figure out how to get to the woman's house
+(d) Help the woman find her way home
+
+22
+Listen to a conversation between two parents.
+W: Have you taken your kids to the playground since it reopened?
+M: I have. They made a lot of additions, but it seems dangerous.
+W: I know. I had to watch my son carefully the whole time.
+M: I wish they hadn't put in so many climbing bars.
+W: Yeah, and the new slides are really steep.
+M: It seems like everything was designed for older kids.
+Q: What is the main topic of the conversation?
+(a) The lack of supervision at the playground
+(b) Upcoming changes to the playground's equipment
+(c) Problems with the changes to the playground
+(d) The risks of making changes to the playground
+
+23
+Listen to a conversation between two coworkers.
+M: The government turned down our gallery's request for funding.
+W: Then we'll be short of money next year.
+M: I know, but we need funds for renovations.
+W: We'll have to raise them ourselves, then.
+M: We could probably seek private donations.
+W: That's one option we can look into.
+Q: What are the man and woman mainly discussing?
+(a) The need to raise money due to a lack of funding
+(b) The unexpectedly high cost of renovations
+(c) The possibility of using private funds to build a gallery
+(d) The reasons for a government funding cut
+
+24
+Listen to a conversation between a customer and a store clerk.
+W: How can I help you today, sir?
+M: I'd like to return this sweater, please.
+W: OK, would you like to exchange it for something else?
+M: No, thanks. I'd just like my money back.
+W: Of course. Do you have your receipt?
+M: I do. It's right here in my bag.
+Q: What did the man come to the store to do?
+(a) Exchange a sweater
+(b) Get a refund for a sweater
+(c) Order a new sweater
+(d) Check the price of a sweater
+
+25
+Listen to a conversation at an office.
+M: Could you help me finalize this marketing proposal?
+W: Sure. Let's discuss it before this afternoon's meeting.
+M: I totally forgot we have a meeting. We're going over scheduling changes, right?
+W: That's next week. This one's just to introduce the new marketing head.
+M: Oh, right. So it shouldn't last long.
+W: Hopefully not. I still need to prepare a report for a client today.
+Q: What is the purpose of the company meeting today?
+(a) To finalize a marketing proposal
+(b) To discuss scheduling changes
+(c) To prepare a report for a client
+(d) To introduce a new staff member
+
+26
+Listen to a conversation between two students.
+W: How do you like living in the undergraduate dormitory?
+M: I'd prefer to have a place of my own off campus.
+W: Why? Don't you and your roommate get along?
+M: He's nice, but he's always interrupting me to chat.
+W: That must make it hard to study.
+M: It does. I need silence to concentrate.
+Q: Why does the man dislike living in the dormitory?
+(a) His roommate is unfriendly.
+(b) His roommate makes a lot of noise.
+(c) His roommate disturbs his studies.
+(d) His roommate barely talks with him.
+
+27
+Listen to a couple make plans for Friday night.
+M: Why don't we go see a movie on Friday night?
+W: I'd rather stay in. I'm pretty tired.
+M: OK, we can get some delivery food.
+W: Good idea. Is the last episode of that drama on TV?
+M: It's on Saturday. We could watch the baseball game, though.
+W: Perfect. That sounds really relaxing.
+Q: What do the man and woman agree to do on Friday night?
+(a) Eat out and go to a baseball game
+(b) Go to a movie theater and a restaurant
+(c) Cook dinner and watch a TV drama
+(d) Order food and watch baseball on TV
+
+28
+Listen to a conversation between two friends.
+W: Guess what! I'm getting married!
+M: Wow, congratulations! I didn't even know you were seeing anyone.
+W: I wasn't. But I met this great guy a month ago, and we just hit it off.
+M: That's unbelievable! Have you set a date?
+W: Not yet. We're leaning toward October, but we're not sure.
+M: Great. Well, I hope you send me an invitation!
+Q: Which is correct about the woman?
+(a) She has introduced her fiancé to the man.
+(b) She got engaged shortly after meeting her fiancé.
+(c) She has set a wedding date in October.
+(d) She has given the man a wedding invitation.
+
+29
+Listen to a conversation about books.
+M: I need a novel to read on my vacation.
+W: I've heard George Smith's new book, Dark Travels, is excellent.
+M: I avoid long books—I just don't have the patience.
+W: All the reviews say that it's captivating, though.
+M: Even so, it might be too much for me.
+W: Then I'd try Tom Lee's Paradise City. It's quite good, too.
+Q: What can be inferred from the conversation?
+(a) The man is a George Smith fan.
+(b) Tom Lee is known for his lengthy novels.
+(c) The woman has already read Dark Travels.
+(d) Paradise City is shorter than Dark Travels.
+
+30
+Listen to two friends discuss politics.
+W: The mayor's planning to run a budget deficit again next year.
+M: Really? He should raise property taxes rather than get the city any deeper into debt.
+W: No way. It's too expensive here as it is!
+M: Not really. Have you looked at the property taxes in other cities?
+W: Well, he could at least try to cut more spending before increasing people's taxes.
+M: Are you kidding me? There's nothing left to be cut.
+Q: What can be inferred from the conversation?
+(a) The city has avoided making major spending cuts.
+(b) The man favors running a budget deficit.
+(c) The mayor has repeatedly raised property taxes.
+(d) The man opposes further reductions to government spending.
+
+31
+Today I want to talk about the economy of the future. There's no doubt that automation will radically reshape countless jobs. That's why tomorrow's workers will have to work hard to remain employable. Gone are the days of graduating from college and enjoying immediate job security. Future workers will have to update their qualifications regularly to stay abreast of the latest developments in their fields. They might even need to take periodic breaks to go back to school.
+Q: What is the speaker's main point about the workers of the future?
+(a) They will have to acquire new skills throughout their careers.
+(b) They will receive frequent training from their employers.
+(c) They will face increased competition from skilled job seekers.
+(d) They will need better qualifications to find jobs.
+
+32
+Good afternoon, class! Today I'd like to continue our discussion of moral philosophy. Thousands of years of Western philosophical thought have instilled in us the idea that moral decisions proceed from logical reasoning. However, a closer examination reveals that ethical decisions are in fact rooted in our instincts. Basically, we begin with a gut reaction and then deploy arguments to justify that response. This process has been observed in many studies of people faced with moral dilemmas.
+Q: What is the speaker mainly saying about moral judgments?
+(a) They lead people to override instincts with logic.
+(b) They are more sophisticated among instinctive people.
+(c) They represent rationalizations of instinctual responses.
+(d) They have little influence on people's instinctual responses.
+
+33
+Here's today's gardening tip. Sandy soil can make it tough to grow rose bushes. Here's a solution. First, choose a sunny but sheltered location. Dig a hole three feet wide and two feet deep, and fill it with garden soil. Plant your roses, and water them weekly. Make sure you pour water on the roots, not the leaves. Also, avoid using fertilizer for the first six weeks. Finally, trim the branches regularly to encourage flowering. And don't forget to stop and smell the roses!
+Q: According to the talk, what should you do when trying to grow rose bushes?
+(a) Plant them in sandy soil
+(b) Give them water daily
+(c) Water them at their base
+(d) Fertilize them for the first six weeks
+
+34
+In financial news, the government released its third-quarter economic figures yesterday. Gross domestic product increased by 2.5% for the quarter, which is an improvement over the 1.5% growth in the previous quarter. The figure came in above economists' expected growth rate of 2%, propelled by a huge 4% increase in consumer spending for the quarter. Strong business spending also contributed to the surprise figure. The stock market rallied on the news, closing up more than 1% on the day.
+Q: By how much had economists expected gross domestic product to increase in the third quarter?
+(a) 1.5%
+(b) 2%
+(c) 2.5%
+(d) 4%
+
+35
+Welcome to today's lecture. Today I'll discuss a traditional hunting practice used by a group of indigenous people called the Blackfoot. For thousands of years, these people hunted buffalo in the Porcupine Hills of what is today western Canada. With weapons in hand, they would chase herds of buffalo toward the edge of a cliff. There, the fleeing animals would leap to their doom. The hunters would then collect the carcasses and cook them overnight in pits dug into the ground.
+Q: How did the hunters kill buffalo?
+(a) By throwing them off the edge of a cliff
+(b) By leading them into pits below a cliff
+(c) By trapping them at the base of a cliff
+(d) By driving them over the side of a cliff
+
+36
+Now for local news. The public has delivered its verdict on the pet-ownership non-discrimination proposal currently being reviewed in city council. The bill would ban landlords from rejecting potential tenants on the basis of pet ownership. Although proponents of the bill have made a strong case that pet owners face serious discrimination in the city's rental market, the public seems largely unmoved by their arguments. Seventy-one percent of respondents to a public survey said that they back landlords on the issue. These results indicate that the mayor risks losing support unless he backtracks on his recent comments about the proposal.
+Q: What can be inferred from the news report?
+(a) The mayor has voiced support for the proposed law.
+(b) The majority of pet owners support the proposed law.
+(c) The proposal was originally put forward by the mayor.
+(d) The law would restrict homeowners' ability to keep pets.
+
+[37-38]
+Thank you all for coming to today's business strategy meeting. Today I want to look at our financial performance here at Southside Grill. We're quickly losing ground to newer rivals in the restaurant scene, so we need to shake things up. To start, we face constant complaints on social media about the cost of our appetizers. By offering these at reduced prices, we could simultaneously build up goodwill with our customer base and increase revenue by boosting total sales. Secondly, we need to recognize the effectiveness of limited-time promotions. We use far fewer of these than our competitors do. Finally, we have the weakest beverage lineup in the industry. To match our brand image, we should develop signature beverages to complement our regular lineup of soft drinks. Such specialty drinks also have higher profit margins than food items.
+
+37
+Q: What is the main topic of the talk?
+(a) Reasons for customers' reluctance to leave competitors
+(b) Ways to improve a restaurant's short-term promotions
+(c) Suggestions for increasing innovation at a restaurant
+(d) Proposals for boosting profits despite increased competition
+
+38
+Q: What have Southside Grill's customers been criticizing the restaurant for?
+(a) Ignoring social media feedback
+(b) Charging too much for appetizers
+(c) Having too few special promotions
+(d) Offering a limited range of beverages
+
+[39-40]
+Good morning, class! In today's biology lecture, we'll be looking at the soft, glowing, tube-like sea creatures known as pyrosomes. Usually, they're found near the surface of warmer areas of the open ocean. However, they've recently been appearing in the coastal waters of western Canada and even as far north as southwestern Alaska. Although pyrosomes can grow up to 10 meters long, those found in Canada's coastal waters are typically less than 60 centimeters in length. Their impact on coastal areas has yet to be determined, but scientists are looking into the potential implications of their spread. One cause for concern is that pyrosomes feed on plankton, the main food source for commercially important shellfish species. There's little direct threat from pyrosomes to people living on the coast, though. The creatures are nontoxic and are even consumed by some whales and seals.
+
+39
+Q: Which is correct about pyrosomes?
+(a) They typically remain on the sea floor.
+(b) They have been appearing in northern Alaska.
+(c) They vary considerably in length.
+(d) They feed mainly on shellfish.
+
+40
+Q: What can be inferred about pyrosomes?
+(a) They are dangerous to human swimmers.
+(b) They are growing to abnormally large sizes.
+(c) They represent a commercially valuable food source.
+(d) They are a potential threat to Canada's marine ecosystem.
+

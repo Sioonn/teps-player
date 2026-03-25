@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEPS Listening Player</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+            background: #1e293b;
+            color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 20px 16px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+        }
+
+        .sidebar-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.15s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background: #334155;
+        }
+
+        .sidebar-item.active {
+            background: #334155;
+            border-left-color: #3b82f6;
+            color: #fff;
+        }
+
+        .sidebar-item .item-count {
+            font-size: 12px;
+            color: #64748b;
+            margin-left: 6px;
+        }
+
+        /* Main area */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header-speed {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Content / Question grid */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .placeholder-msg {
+            text-align: center;
+            color: #94a3b8;
+            margin-top: 80px;
+            font-size: 16px;
+        }
+
+        .script-panel {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            color: #334155;
+            display: none;
+        }
+
+        .script-panel.visible {
+            display: block;
+        }
+
+        .script-panel .script-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #1e293b;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .script-panel .script-body .choice {
+            display: block;
+            margin: 2px 0;
+            padding: 2px 0;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(48px, 48px));
+            gap: 8px;
+        }
+
+        .q-btn {
+            width: 48px;
+            height: 48px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            background: #e2e8f0;
+            color: #1e293b;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            user-select: none;
+        }
+
+        .q-btn:hover {
+            border-color: #3b82f6;
+        }
+
+        .q-btn.active {
+            background: #3b82f6;
+            color: #fff;
+            border-color: #3b82f6;
+        }
+
+        /* Player bar */
+        .player-bar {
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-height: 64px;
+        }
+
+        /* Play/Pause button */
+        .play-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: #3b82f6;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+        .play-btn:hover {
+            background: #2563eb;
+        }
+
+        .play-icon, .pause-icon {
+            display: block;
+        }
+
+        /* CSS triangle for play */
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 8px 0 8px 14px;
+            border-color: transparent transparent transparent #fff;
+            margin-left: 2px;
+        }
+
+        /* CSS bars for pause */
+        .pause-icon {
+            display: flex;
+            gap: 3px;
+        }
+
+        .pause-icon span {
+            display: block;
+            width: 4px;
+            height: 16px;
+            background: #fff;
+            border-radius: 1px;
+        }
+
+        .track-label {
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 80px;
+            white-space: nowrap;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            flex: 1;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s linear;
+            position: relative;
+            z-index: 1;
+        }
+
+        .silence-marker {
+            position: absolute;
+            top: -3px;
+            height: 12px;
+            background: rgba(239, 68, 68, 0.5);
+            border-radius: 2px;
+            z-index: 2;
+            pointer-events: none;
+            min-width: 2px;
+        }
+
+        .time-display {
+            font-size: 13px;
+            color: #64748b;
+            min-width: 90px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .speed-display {
+            font-size: 13px;
+            font-weight: 600;
+            color: #3b82f6;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .auto-advance-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #64748b;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .auto-advance-toggle input {
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .sidebar {
+                display: none;
+            }
+
+            .player-bar {
+                padding: 10px 12px;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .track-label {
+                min-width: auto;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .question-grid {
+                grid-template-columns: repeat(auto-fill, minmax(44px, 44px));
+                gap: 6px;
+            }
+
+            .q-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Tests</div>
+    </aside>
+
+    <div class="main">
+        <header class="header">
+            <h1>TEPS Listening Player</h1>
+            <span class="header-speed" id="headerSpeed">1.0x</span>
+        </header>
+
+        <div class="content" id="content">
+            <div class="placeholder-msg">Select a test from the sidebar to begin.</div>
+            <div class="script-panel" id="scriptPanel">
+                <div class="script-title" id="scriptTitle"></div>
+                <div class="script-body" id="scriptBody"></div>
+            </div>
+        </div>
+
+        <div class="player-bar">
+            <button class="play-btn" id="playBtn" title="Play / Pause">
+                <div class="play-icon" id="playIcon"></div>
+                <div class="pause-icon" id="pauseIcon" style="display:none;">
+                    <span></span><span></span>
+                </div>
+            </button>
+            <span class="track-label" id="trackLabel">--</span>
+            <div class="progress-container" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+            <span class="speed-display" id="speedDisplay">1.0x</span>
+            <label class="auto-advance-toggle">
+                <input type="checkbox" id="autoAdvance"> Auto
+            </label>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        "use strict";
+
+        // === MANIFEST (auto-updated by split.py, or edit manually for file:// use) ===
+        const EMBEDDED_MANIFEST = {
+          "tests": [
+            {
+              "name": "test2",
+              "displayName": "Test 2",
+              "path": "script/test2",
+              "files": [
+                {"file":"01.mp3","label":"01"},{"file":"02.mp3","label":"02"},
+                {"file":"03.mp3","label":"03"},{"file":"04.mp3","label":"04"},
+                {"file":"05.mp3","label":"05"},{"file":"06.mp3","label":"06"},
+                {"file":"07.mp3","label":"07"},{"file":"08.mp3","label":"08"},
+                {"file":"09.mp3","label":"09"},{"file":"10.mp3","label":"10"},
+                {"file":"11.mp3","label":"11"},{"file":"12.mp3","label":"12"},
+                {"file":"13.mp3","label":"13"},{"file":"14.mp3","label":"14"},
+                {"file":"15.mp3","label":"15"},{"file":"16.mp3","label":"16"},
+                {"file":"17.mp3","label":"17"},{"file":"18.mp3","label":"18"},
+                {"file":"19.mp3","label":"19"},{"file":"20.mp3","label":"20"},
+                {"file":"21.mp3","label":"21"},{"file":"22.mp3","label":"22"},
+                {"file":"23.mp3","label":"23"},{"file":"24.mp3","label":"24"},
+                {"file":"25.mp3","label":"25"},{"file":"26.mp3","label":"26"},
+                {"file":"27.mp3","label":"27"},{"file":"28.mp3","label":"28"},
+                {"file":"29.mp3","label":"29"},{"file":"30.mp3","label":"30"},
+                {"file":"31.mp3","label":"31"},{"file":"32.mp3","label":"32"},
+                {"file":"33.mp3","label":"33"},{"file":"34.mp3","label":"34"},
+                {"file":"35.mp3","label":"35"},{"file":"36.mp3","label":"36"},
+                {"file":"37_38.mp3","label":"37-38"},
+                {"file":"39_40.mp3","label":"39-40"}
+              ]
+            }
+          ]
+        };
+        // === END MANIFEST ===
+
+        const state = {
+            tests: [],
+            currentTest: null,
+            currentQuestion: -1,
+            playbackRate: 1.0,
+            audio: new Audio(),
+            scripts: {}
+        };
+
+        // DOM refs
+        const scriptPanel = document.getElementById("scriptPanel");
+        const scriptTitle = document.getElementById("scriptTitle");
+        const scriptBody = document.getElementById("scriptBody");
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+        const playBtn = document.getElementById("playBtn");
+        const playIcon = document.getElementById("playIcon");
+        const pauseIcon = document.getElementById("pauseIcon");
+        const trackLabel = document.getElementById("trackLabel");
+        const progressBar = document.getElementById("progressBar");
+        const progressFill = document.getElementById("progressFill");
+        const timeDisplay = document.getElementById("timeDisplay");
+        const speedDisplay = document.getElementById("speedDisplay");
+        const headerSpeed = document.getElementById("headerSpeed");
+        const autoAdvanceCheck = document.getElementById("autoAdvance");
+
+        function init() {
+            // Restore auto-advance preference
+            const saved = localStorage.getItem("teps_auto_advance");
+            if (saved !== null) {
+                autoAdvanceCheck.checked = saved === "true";
+            }
+
+            autoAdvanceCheck.addEventListener("change", function () {
+                localStorage.setItem("teps_auto_advance", autoAdvanceCheck.checked);
+            });
+
+            // Audio events
+            state.audio.addEventListener("timeupdate", updatePlayerUI);
+            state.audio.addEventListener("ended", onTrackEnded);
+
+            // Player controls
+            playBtn.addEventListener("click", togglePlayPause);
+
+            progressBar.addEventListener("click", function (e) {
+                if (!state.audio.src || !isFinite(state.audio.duration)) return;
+                var rect = progressBar.getBoundingClientRect();
+                var ratio = (e.clientX - rect.left) / rect.width;
+                ratio = Math.max(0, Math.min(1, ratio));
+                state.audio.currentTime = ratio * state.audio.duration;
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener("keydown", function (e) {
+                var tag = (e.target.tagName || "").toLowerCase();
+                if (tag === "input" || tag === "textarea" || tag === "select") return;
+
+                switch (e.code) {
+                    case "Space":
+                        e.preventDefault();
+                        togglePlayPause();
+                        break;
+                    case "ArrowUp":
+                        e.preventDefault();
+                        adjustSpeed(0.1);
+                        break;
+                    case "ArrowDown":
+                        e.preventDefault();
+                        adjustSpeed(-0.1);
+                        break;
+                    case "ArrowRight":
+                        e.preventDefault();
+                        seek(3);
+                        break;
+                    case "ArrowLeft":
+                        e.preventDefault();
+                        seek(-3);
+                        break;
+                }
+            });
+
+            loadManifest();
+            loadScripts();
+        }
+
+        function loadScripts() {
+            fetch("scripts.json")
+                .then(function (res) {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return res.json();
+                })
+                .then(function (data) {
+                    state.scripts = data || {};
+                })
+                .catch(function () {});
+        }
+
+        function loadManifest() {
+            fetch("manifest.json")
+                .then(function (res) {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return res.json();
+                })
+                .then(function (data) {
+                    state.tests = data.tests || [];
+                    renderSidebar();
+                    autoSelectTest();
+                })
+                .catch(function () {
+                    state.tests = EMBEDDED_MANIFEST.tests || [];
+                    renderSidebar();
+                    autoSelectTest();
+                });
+        }
+
+        function autoSelectTest() {
+            if (state.tests.length > 0) {
+                selectTest(state.tests[0].name);
+            }
+        }
+
+        function renderSidebar() {
+            // Clear existing items but keep title
+            var items = sidebar.querySelectorAll(".sidebar-item");
+            for (var i = 0; i < items.length; i++) {
+                items[i].remove();
+            }
+
+            state.tests.forEach(function (test) {
+                var div = document.createElement("div");
+                div.className = "sidebar-item";
+                if (state.currentTest && state.currentTest.name === test.name) {
+                    div.classList.add("active");
+                }
+                var count = test.files ? test.files.length : (test.questionCount || 0);
+                div.innerHTML = test.displayName +
+                    '<span class="item-count">(' + count + ")</span>";
+                div.addEventListener("click", function () {
+                    selectTest(test.name);
+                });
+                sidebar.appendChild(div);
+            });
+        }
+
+        function selectTest(name) {
+            var test = null;
+            for (var i = 0; i < state.tests.length; i++) {
+                if (state.tests[i].name === name) {
+                    test = state.tests[i];
+                    break;
+                }
+            }
+            if (!test) return;
+
+            state.currentTest = test;
+            state.currentQuestion = -1;
+            state.audio.pause();
+            state.audio.src = "";
+            updatePlayPauseIcon(false);
+            trackLabel.textContent = "--";
+            progressFill.style.width = "0%";
+            timeDisplay.textContent = "0:00 / 0:00";
+
+            renderSidebar();
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            if (!state.currentTest) {
+                content.innerHTML = '<div class="placeholder-msg">Select a test from the sidebar to begin.</div><div class="script-panel" id="scriptPanel"><div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div></div>';
+                return;
+            }
+
+            var files = state.currentTest.files || [];
+            if (files.length === 0) {
+                content.innerHTML = '<div class="placeholder-msg">No questions available for this test. Run split.py to generate segments.</div><div class="script-panel" id="scriptPanel"><div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div></div>';
+                return;
+            }
+
+            var html = '<div class="question-grid">';
+            for (var i = 0; i < files.length; i++) {
+                var cls = "q-btn";
+                if (i === state.currentQuestion) cls += " active";
+                html += '<button class="' + cls + '" data-idx="' + i + '">' + files[i].label + "</button>";
+            }
+            html += '</div><div class="script-panel" id="scriptPanel"><div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div></div>';
+            content.innerHTML = html;
+
+            var buttons = content.querySelectorAll(".q-btn");
+            buttons.forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    var idx = parseInt(btn.getAttribute("data-idx"), 10);
+                    playQuestion(idx);
+                    btn.blur();
+                });
+            });
+        }
+
+        function playQuestion(idx) {
+            var files = state.currentTest ? state.currentTest.files || [] : [];
+            if (idx < 0 || idx >= files.length) return;
+
+            state.currentQuestion = idx;
+
+            var fileInfo = files[idx];
+            var src = state.currentTest.path + "/" + fileInfo.file;
+            state.audio.src = src;
+            state.audio.playbackRate = state.playbackRate;
+            state.audio.play().catch(function () {});
+
+            trackLabel.textContent = state.currentTest.displayName + " - Q" + fileInfo.label;
+            updatePlayPauseIcon(true);
+            highlightActiveButton();
+            clearSilenceMarkers();
+            detectSilences(src);
+            showScript(fileInfo.label);
+        }
+
+        function showScript(label) {
+            var panel = document.getElementById("scriptPanel");
+            var title = document.getElementById("scriptTitle");
+            var body = document.getElementById("scriptBody");
+            if (!panel) return;
+
+            // For labels like "37-38", look up both individual question scripts
+            var keys = [];
+            if (label.indexOf("-") >= 0) {
+                var parts = label.split("-");
+                var start = parseInt(parts[0], 10);
+                var end = parseInt(parts[1], 10);
+                for (var n = start; n <= end; n++) keys.push(String(n));
+            } else {
+                keys.push(String(parseInt(label, 10)));
+            }
+
+            var scriptText = "";
+            for (var k = 0; k < keys.length; k++) {
+                var s = state.scripts[keys[k]];
+                if (s) {
+                    if (scriptText) scriptText += "\n\n---\n\n";
+                    scriptText += s;
+                }
+            }
+
+            if (scriptText) {
+                title.textContent = "Q" + label + " Script";
+                body.textContent = scriptText;
+                panel.classList.add("visible");
+            } else {
+                panel.classList.remove("visible");
+            }
+        }
+
+        function clearSilenceMarkers() {
+            var markers = progressBar.querySelectorAll(".silence-marker");
+            for (var i = 0; i < markers.length; i++) markers[i].remove();
+        }
+
+        function detectSilences(src) {
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            fetch(src)
+                .then(function (res) { return res.arrayBuffer(); })
+                .then(function (buf) { return audioCtx.decodeAudioData(buf); })
+                .then(function (decoded) {
+                    var data = decoded.getChannelData(0);
+                    var sampleRate = decoded.sampleRate;
+                    var duration = decoded.duration;
+                    var windowSize = Math.floor(sampleRate * 0.05);
+                    var silenceThresh = 0.01;
+                    var minSilenceSec = 2.0;
+
+                    var silences = [];
+                    var silenceStart = -1;
+
+                    for (var i = 0; i < data.length; i += windowSize) {
+                        var sum = 0;
+                        var end = Math.min(i + windowSize, data.length);
+                        for (var j = i; j < end; j++) sum += Math.abs(data[j]);
+                        var avg = sum / (end - i);
+
+                        if (avg < silenceThresh) {
+                            if (silenceStart < 0) silenceStart = i / sampleRate;
+                        } else {
+                            if (silenceStart >= 0) {
+                                var silenceEnd = i / sampleRate;
+                                if (silenceEnd - silenceStart >= minSilenceSec) {
+                                    silences.push({ start: silenceStart, end: silenceEnd });
+                                }
+                                silenceStart = -1;
+                            }
+                        }
+                    }
+                    if (silenceStart >= 0) {
+                        var silenceEnd = data.length / sampleRate;
+                        if (silenceEnd - silenceStart >= minSilenceSec) {
+                            silences.push({ start: silenceStart, end: silenceEnd });
+                        }
+                    }
+
+                    silences.forEach(function (s) {
+                        var left = (s.start / duration) * 100;
+                        var width = ((s.end - s.start) / duration) * 100;
+                        var marker = document.createElement("div");
+                        marker.className = "silence-marker";
+                        marker.style.left = left + "%";
+                        marker.style.width = Math.max(width, 0.3) + "%";
+                        marker.title = formatTime(s.start) + " - " + formatTime(s.end) + " (silence)";
+                        progressBar.appendChild(marker);
+                    });
+
+                    audioCtx.close();
+                })
+                .catch(function () { /* ignore errors */ });
+        }
+
+        function highlightActiveButton() {
+            var buttons = content.querySelectorAll(".q-btn");
+            buttons.forEach(function (btn) {
+                var idx = parseInt(btn.getAttribute("data-idx"), 10);
+                if (idx === state.currentQuestion) {
+                    btn.classList.add("active");
+                } else {
+                    btn.classList.remove("active");
+                }
+            });
+        }
+
+        function togglePlayPause() {
+            if (!state.audio.src || state.audio.src === window.location.href) {
+                // No track loaded, try playing first question
+                if (state.currentTest && (state.currentTest.files || []).length > 0) {
+                    playQuestion(0);
+                }
+                return;
+            }
+
+            if (state.audio.paused) {
+                state.audio.play().catch(function () {});
+                updatePlayPauseIcon(true);
+            } else {
+                state.audio.pause();
+                updatePlayPauseIcon(false);
+            }
+        }
+
+        function updatePlayPauseIcon(playing) {
+            if (playing) {
+                playIcon.style.display = "none";
+                pauseIcon.style.display = "flex";
+            } else {
+                playIcon.style.display = "block";
+                pauseIcon.style.display = "none";
+            }
+        }
+
+        function adjustSpeed(delta) {
+            var newRate = Math.round((state.playbackRate + delta) * 10) / 10;
+            newRate = Math.max(0.5, Math.min(2.0, newRate));
+            state.playbackRate = newRate;
+            state.audio.playbackRate = newRate;
+            var label = newRate.toFixed(1) + "x";
+            speedDisplay.textContent = label;
+            headerSpeed.textContent = label;
+        }
+
+        function seek(delta) {
+            if (!state.audio.src || !isFinite(state.audio.duration)) return;
+            state.audio.currentTime = Math.max(
+                0,
+                Math.min(state.audio.duration, state.audio.currentTime + delta)
+            );
+        }
+
+        function updatePlayerUI() {
+            if (!isFinite(state.audio.duration)) return;
+            var current = state.audio.currentTime;
+            var duration = state.audio.duration;
+            var pct = (current / duration) * 100;
+            progressFill.style.width = pct + "%";
+            timeDisplay.textContent = formatTime(current) + " / " + formatTime(duration);
+        }
+
+        function formatTime(seconds) {
+            if (!isFinite(seconds)) return "0:00";
+            var s = Math.floor(seconds);
+            var m = Math.floor(s / 60);
+            s = s % 60;
+            return m + ":" + (s < 10 ? "0" : "") + s;
+        }
+
+        function onTrackEnded() {
+            updatePlayPauseIcon(false);
+            progressFill.style.width = "0%";
+
+            var files = state.currentTest ? state.currentTest.files || [] : [];
+            if (
+                autoAdvanceCheck.checked &&
+                state.currentTest &&
+                state.currentQuestion < files.length - 1
+            ) {
+                playQuestion(state.currentQuestion + 1);
+            } else {
+                state.currentQuestion = -1;
+                highlightActiveButton();
+            }
+        }
+
+        // Start
+        init();
+    })();
+    </script>
+</body>
+</html>

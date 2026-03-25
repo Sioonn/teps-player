@@ -184,10 +184,6 @@
             color: #fff;
         }
 
-        .q-btn.pressing {
-            transform: scale(0.92);
-            transition: transform 0.1s;
-        }
 
         /* Player bar */
         .player-bar {
@@ -1014,48 +1010,17 @@
         }
 
         function attachButtonHandlers(btn) {
-            var holdTimer = null;
-            var didLongPress = false;
-
-            function startHold(e) {
-                didLongPress = false;
-                btn.classList.add("pressing");
-                holdTimer = setTimeout(function() {
-                    didLongPress = true;
-                    btn.classList.remove("pressing");
-                    var idx = parseInt(btn.getAttribute("data-idx"), 10);
-                    toggleMark(idx);
-                    // Haptic feedback on mobile
-                    if (navigator.vibrate) navigator.vibrate(40);
-                }, 500);
-            }
-
-            function cancelHold() {
-                clearTimeout(holdTimer);
-                btn.classList.remove("pressing");
-            }
-
-            // Mouse events
-            btn.addEventListener("mousedown", startHold);
-            btn.addEventListener("mouseup", function() {
-                cancelHold();
-            });
-            btn.addEventListener("mouseleave", cancelHold);
-
-            // Touch events
-            btn.addEventListener("touchstart", function(e) {
-                startHold(e);
-            }, {passive: true});
-            btn.addEventListener("touchend", function(e) {
-                cancelHold();
-            });
-            btn.addEventListener("touchcancel", cancelHold);
-
-            // Regular click → play (only if not a long press)
             btn.addEventListener("click", function() {
-                if (didLongPress) { didLongPress = false; return; }
                 var idx = parseInt(btn.getAttribute("data-idx"), 10);
                 playQuestion(idx);
+                btn.blur();
+            });
+
+            btn.addEventListener("dblclick", function(e) {
+                e.preventDefault();
+                var idx = parseInt(btn.getAttribute("data-idx"), 10);
+                toggleMark(idx);
+                if (navigator.vibrate) navigator.vibrate(40);
                 btn.blur();
             });
         }

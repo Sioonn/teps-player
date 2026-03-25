@@ -277,6 +277,32 @@
             white-space: nowrap;
         }
 
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .speed-btn {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 0;
+        }
+
+        .speed-btn:hover { background: #e2e8f0; }
+        .speed-btn:active { background: #cbd5e1; }
+
         .speed-display {
             font-size: 13px;
             font-weight: 600;
@@ -677,7 +703,11 @@
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
-            <span class="speed-display" id="speedDisplay">1.0x</span>
+            <div class="speed-control">
+                <button class="speed-btn" id="speedDown" title="Speed -0.1 (↓)">&#9660;</button>
+                <span class="speed-display" id="speedDisplay">1.0x</span>
+                <button class="speed-btn" id="speedUp" title="Speed +0.1 (↑)">&#9650;</button>
+            </div>
             <label class="auto-advance-toggle">
                 <input type="checkbox" id="autoAdvance"> Auto
             </label>
@@ -767,6 +797,8 @@
             playBtn.addEventListener("click", togglePlayPause);
             document.getElementById("seekBack").addEventListener("click", function () { seek(-3); });
             document.getElementById("seekFwd").addEventListener("click", function () { seek(3); });
+            document.getElementById("speedDown").addEventListener("click", function () { adjustSpeed(-0.1); });
+            document.getElementById("speedUp").addEventListener("click", function () { adjustSpeed(0.1); });
 
             progressBar.addEventListener("click", function (e) {
                 if (!state.audio.src || !isFinite(state.audio.duration)) return;

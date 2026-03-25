@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEPS Listening Player</title>
+    <meta name="robots" content="noindex, nofollow">
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -543,8 +544,13 @@
                     div.classList.add("active");
                 }
                 var count = test.files ? test.files.length : (test.questionCount || 0);
-                div.innerHTML = test.displayName +
-                    '<span class="item-count">(' + count + ")</span>";
+                var nameSpan = document.createElement("span");
+                nameSpan.textContent = test.displayName;
+                var countSpan = document.createElement("span");
+                countSpan.className = "item-count";
+                countSpan.textContent = "(" + count + ")";
+                div.appendChild(nameSpan);
+                div.appendChild(countSpan);
                 div.addEventListener("click", function () {
                     selectTest(test.name);
                 });
@@ -587,14 +593,23 @@
                 return;
             }
 
-            var html = '<div class="question-grid">';
+            content.innerHTML = "";
+            var grid = document.createElement("div");
+            grid.className = "question-grid";
             for (var i = 0; i < files.length; i++) {
-                var cls = "q-btn";
-                if (i === state.currentQuestion) cls += " active";
-                html += '<button class="' + cls + '" data-idx="' + i + '">' + files[i].label + "</button>";
+                var btn = document.createElement("button");
+                btn.className = "q-btn";
+                if (i === state.currentQuestion) btn.classList.add("active");
+                btn.setAttribute("data-idx", i);
+                btn.textContent = files[i].label;
+                grid.appendChild(btn);
             }
-            html += '</div><div class="script-panel" id="scriptPanel"><div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div></div>';
-            content.innerHTML = html;
+            content.appendChild(grid);
+            var sp = document.createElement("div");
+            sp.className = "script-panel";
+            sp.id = "scriptPanel";
+            sp.innerHTML = '<div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div>';
+            content.appendChild(sp);
 
             var buttons = content.querySelectorAll(".q-btn");
             buttons.forEach(function (btn) {

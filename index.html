@@ -1444,8 +1444,9 @@
             }
 
             var scriptText = "";
+            var testScripts = state.scripts[state.currentTest.name] || state.scripts;
             for (var k = 0; k < keys.length; k++) {
-                var s = state.scripts[keys[k]];
+                var s = testScripts[keys[k]];
                 if (s) {
                     if (scriptText) scriptText += "\n\n---\n\n";
                     scriptText += s;

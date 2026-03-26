@@ -158,6 +158,165 @@
           "label": "39-40"
         }
       ]
+    },
+    {
+      "name": "test3",
+      "displayName": "Test 3",
+      "path": "script/test3",
+      "files": [
+        {
+          "file": "01.mp3",
+          "label": "01"
+        },
+        {
+          "file": "02.mp3",
+          "label": "02"
+        },
+        {
+          "file": "03.mp3",
+          "label": "03"
+        },
+        {
+          "file": "04.mp3",
+          "label": "04"
+        },
+        {
+          "file": "05.mp3",
+          "label": "05"
+        },
+        {
+          "file": "06.mp3",
+          "label": "06"
+        },
+        {
+          "file": "07.mp3",
+          "label": "07"
+        },
+        {
+          "file": "08.mp3",
+          "label": "08"
+        },
+        {
+          "file": "09.mp3",
+          "label": "09"
+        },
+        {
+          "file": "10.mp3",
+          "label": "10"
+        },
+        {
+          "file": "11.mp3",
+          "label": "11"
+        },
+        {
+          "file": "12.mp3",
+          "label": "12"
+        },
+        {
+          "file": "13.mp3",
+          "label": "13"
+        },
+        {
+          "file": "14.mp3",
+          "label": "14"
+        },
+        {
+          "file": "15.mp3",
+          "label": "15"
+        },
+        {
+          "file": "16.mp3",
+          "label": "16"
+        },
+        {
+          "file": "17.mp3",
+          "label": "17"
+        },
+        {
+          "file": "18.mp3",
+          "label": "18"
+        },
+        {
+          "file": "19.mp3",
+          "label": "19"
+        },
+        {
+          "file": "20.mp3",
+          "label": "20"
+        },
+        {
+          "file": "21.mp3",
+          "label": "21"
+        },
+        {
+          "file": "22.mp3",
+          "label": "22"
+        },
+        {
+          "file": "23.mp3",
+          "label": "23"
+        },
+        {
+          "file": "24.mp3",
+          "label": "24"
+        },
+        {
+          "file": "25.mp3",
+          "label": "25"
+        },
+        {
+          "file": "26.mp3",
+          "label": "26"
+        },
+        {
+          "file": "27.mp3",
+          "label": "27"
+        },
+        {
+          "file": "28.mp3",
+          "label": "28"
+        },
+        {
+          "file": "29.mp3",
+          "label": "29"
+        },
+        {
+          "file": "30.mp3",
+          "label": "30"
+        },
+        {
+          "file": "31.mp3",
+          "label": "31"
+        },
+        {
+          "file": "32.mp3",
+          "label": "32"
+        },
+        {
+          "file": "33.mp3",
+          "label": "33"
+        },
+        {
+          "file": "34.mp3",
+          "label": "34"
+        },
+        {
+          "file": "35.mp3",
+          "label": "35"
+        },
+        {
+          "file": "36.mp3",
+          "label": "36"
+        },
+        {
+          "file": "37_38.mp3",
+          "label": "37-38"
+        },
+        {
+          "file": "39_40.mp3",
+          "label": "39-40"
+        }
+      ]
     }
   ]
 }

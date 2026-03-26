@@ -18,6 +18,7 @@
             color: #1e293b;
             display: flex;
             height: 100vh;
+            height: 100dvh;
             overflow: hidden;
         }
 
@@ -204,6 +205,7 @@
             align-items: center;
             gap: 16px;
             min-height: 64px;
+            flex-shrink: 0;
         }
 
         /* Play/Pause button */
@@ -629,21 +631,17 @@
 
         .hamburger {
             display: none;
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 1001;
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
+            background: none;
+            border: none;
             width: 36px;
             height: 36px;
             cursor: pointer;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
             color: #334155;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 0;
+            flex-shrink: 0;
         }
 
         .sidebar-overlay {
@@ -734,7 +732,6 @@
     </style>
 </head>
 <body>
-    <button class="hamburger" id="hamburger">&#9776;</button>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-title">Tests</div>
@@ -745,6 +742,7 @@
 
     <div class="main">
         <header class="header">
+            <button class="hamburger" id="hamburger">&#9776;</button>
             <h1>TEPS Listening Player</h1>
             <span class="header-speed" id="headerSpeed">1.0x</span>
         </header>
@@ -789,6 +787,12 @@
         // === MANIFEST (auto-updated by split.py, or edit manually for file:// use) ===
         const EMBEDDED_MANIFEST = {
           "tests": [
+            {
+              "name": "jungseok_1",
+              "displayName": "Jungseok_ 1",
+              "path": "script/jungseok_1",
+              "questionCount": 38
+            },
             {
               "name": "test2",
               "displayName": "Test 2",

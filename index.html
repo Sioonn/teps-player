@@ -139,6 +139,16 @@
             padding: 2px 0;
         }
 
+        .script-body mark {
+            background: #fef08a;
+            border-radius: 2px;
+            cursor: pointer;
+            padding: 0 1px;
+        }
+        .script-body mark:hover {
+            background: #fde047;
+        }
+
         .question-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(48px, 48px));
@@ -1108,7 +1118,10 @@
             playbackRate: 1.0,
             audio: new Audio(),
             scripts: {},
-            marks: {}   // key: "testName:idx" → true
+            marks: {},   // key: "testName:idx" → true
+            highlights: {},  // key: scriptKey → [{id, start, end}]
+            currentScriptText: "",
+            currentScriptLabel: ""
         };
 
         // DOM refs
@@ -1167,6 +1180,99 @@
             }).catch(function() {});
         }
 
+        // === Supabase highlights sync ===
+        function loadHighlightsFromDB() {
+            return supaFetch("/highlights?select=id,script_key,start_offset,end_offset")
+                .then(function(res) { return res.json(); })
+                .then(function(rows) {
+                    state.highlights = {};
+                    rows.forEach(function(r) {
+                        if (!state.highlights[r.script_key]) state.highlights[r.script_key] = [];
+                        state.highlights[r.script_key].push({
+                            id: r.id, start: r.start_offset, end: r.end_offset
+                        });
+                    });
+                    rerenderCurrentScript();
+                })
+                .catch(function() {});
+        }
+
+        function addHighlightToDB(scriptKey, start, end) {
+            return supaFetch("/highlights", {
+                method: "POST",
+                prefer: "return=representation",
+                body: JSON.stringify({ script_key: scriptKey, start_offset: start, end_offset: end })
+            }).then(function(res) { return res.json(); })
+              .then(function(rows) { return rows[0]; });
+        }
+
+        function removeHighlightFromDB(id) {
+            return supaFetch("/highlights?id=eq." + encodeURIComponent(id), {
+                method: "DELETE"
+            }).catch(function() {});
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;");
+        }
+
+        function highlightKey(label) {
+            return state.currentTest.name + ":Q" + label;
+        }
+
+        function renderScriptWithHighlights(body, scriptText, label) {
+            var key = highlightKey(label);
+            var ranges = (state.highlights[key] || []).slice();
+
+            ranges.sort(function(a, b) { return a.start - b.start; });
+            var merged = [];
+            for (var i = 0; i < ranges.length; i++) {
+                var r = { start: ranges[i].start, end: ranges[i].end, ids: [ranges[i].id] };
+                while (i + 1 < ranges.length && ranges[i + 1].start <= r.end) {
+                    i++;
+                    r.end = Math.max(r.end, ranges[i].end);
+                    r.ids = r.ids.concat([ranges[i].id]);
+                }
+                merged.push(r);
+            }
+
+            var html = "";
+            var pos = 0;
+            for (var m = 0; m < merged.length; m++) {
+                html += escapeHtml(scriptText.substring(pos, merged[m].start));
+                html += '<mark data-ids="' + merged[m].ids.join(",") + '">';
+                html += escapeHtml(scriptText.substring(merged[m].start, merged[m].end));
+                html += '</mark>';
+                pos = merged[m].end;
+            }
+            html += escapeHtml(scriptText.substring(pos));
+
+            body.innerHTML = html;
+        }
+
+        function rerenderCurrentScript() {
+            if (state.currentScriptText && state.currentScriptLabel) {
+                var body = document.getElementById("scriptBody");
+                if (body) renderScriptWithHighlights(body, state.currentScriptText, state.currentScriptLabel);
+            }
+        }
+
+        function getTextOffset(container, node, offset) {
+            var walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+            var charCount = 0;
+            var current;
+            while ((current = walker.nextNode())) {
+                if (current === node) {
+                    return charCount + offset;
+                }
+                charCount += current.textContent.length;
+            }
+            return -1;
+        }
+
         function refreshMarkButtons() {
             var buttons = content.querySelectorAll(".q-btn");
             buttons.forEach(function(btn) {
@@ -1177,8 +1283,52 @@
         }
 
         function init() {
-            // Load marks from Supabase DB
+            // Load marks and highlights from Supabase DB
             loadMarksFromDB();
+            loadHighlightsFromDB();
+
+            // Highlight selection handler
+            function handleHighlightSelection(e) {
+                var body = document.getElementById("scriptBody");
+                if (!body || !state.currentScriptText) return;
+
+                var sel = window.getSelection();
+                if (!sel || sel.isCollapsed) {
+                    // Check if clicked on existing <mark> to remove it
+                    var target = e.target;
+                    if (target.tagName === "MARK" && target.dataset.ids) {
+                        var ids = target.dataset.ids.split(",");
+                        var key = highlightKey(state.currentScriptLabel);
+                        ids.forEach(function(id) {
+                            state.highlights[key] = (state.highlights[key] || []).filter(function(h) {
+                                return h.id !== id;
+                            });
+                            removeHighlightFromDB(id);
+                        });
+                        rerenderCurrentScript();
+                    }
+                    return;
+                }
+
+                if (!body.contains(sel.anchorNode) || !body.contains(sel.focusNode)) return;
+
+                var start = getTextOffset(body, sel.anchorNode, sel.anchorOffset);
+                var end = getTextOffset(body, sel.focusNode, sel.focusOffset);
+                if (start === -1 || end === -1) return;
+                if (start > end) { var tmp = start; start = end; end = tmp; }
+                if (start === end) return;
+
+                var key = highlightKey(state.currentScriptLabel);
+                addHighlightToDB(key, start, end).then(function(row) {
+                    if (!row) return;
+                    if (!state.highlights[key]) state.highlights[key] = [];
+                    state.highlights[key].push({ id: row.id, start: start, end: end });
+                    rerenderCurrentScript();
+                    sel.removeAllRanges();
+                });
+            }
+            document.addEventListener("mouseup", handleHighlightSelection);
+            document.addEventListener("touchend", handleHighlightSelection);
 
             // Hamburger menu toggle
             var hamburger = document.getElementById("hamburger");
@@ -1460,7 +1610,9 @@
 
             if (scriptText) {
                 title.textContent = "Q" + label + " Script";
-                body.textContent = scriptText;
+                state.currentScriptText = scriptText;
+                state.currentScriptLabel = label;
+                renderScriptWithHighlights(body, scriptText, label);
                 panel.classList.add("visible");
             } else {
                 panel.classList.remove("visible");

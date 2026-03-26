@@ -339,6 +339,24 @@
             cursor: pointer;
         }
 
+        .share-marks-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 11px;
+            color: #64748b;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .share-marks-btn:active {
+            background: #f1f5f9;
+        }
+        .share-marks-btn.copied {
+            color: #16a34a;
+            border-color: #16a34a;
+        }
+
         /* Sidebar upload button */
         .sidebar-upload {
             padding: 12px 16px;
@@ -724,6 +742,7 @@
             <label class="auto-advance-toggle">
                 <input type="checkbox" id="autoAdvance"> Auto
             </label>
+            <button class="share-marks-btn" id="shareMarks" title="Copy link with marks">Share marks</button>
         </div>
     </div>
 
@@ -1083,12 +1102,82 @@
         const headerSpeed = document.getElementById("headerSpeed");
         const autoAdvanceCheck = document.getElementById("autoAdvance");
 
+        function marksToHash(marks) {
+            // Encode marks as compact string: test2:0,3,5;test3:1,7
+            var byTest = {};
+            Object.keys(marks).forEach(function(key) {
+                var parts = key.split(":");
+                var test = parts[0], idx = parts[1];
+                if (!byTest[test]) byTest[test] = [];
+                byTest[test].push(idx);
+            });
+            var segs = [];
+            Object.keys(byTest).sort().forEach(function(test) {
+                segs.push(test + ":" + byTest[test].join(","));
+            });
+            return segs.length ? segs.join(";") : "";
+        }
+
+        function hashToMarks(hash) {
+            var marks = {};
+            if (!hash) return marks;
+            hash.split(";").forEach(function(seg) {
+                var parts = seg.split(":");
+                if (parts.length !== 2) return;
+                var test = parts[0];
+                parts[1].split(",").forEach(function(idx) {
+                    if (idx !== "") marks[test + ":" + idx] = true;
+                });
+            });
+            return marks;
+        }
+
+        function updateUrlHash() {
+            var encoded = marksToHash(state.marks);
+            if (encoded) {
+                history.replaceState(null, "", "#marks=" + encoded);
+            } else {
+                history.replaceState(null, "", window.location.pathname + window.location.search);
+            }
+        }
+
         function init() {
-            // Restore marks
+            // Restore marks: URL hash takes priority over localStorage
             try {
                 var savedMarks = localStorage.getItem("teps_marks");
                 if (savedMarks) state.marks = JSON.parse(savedMarks);
             } catch(e) {}
+
+            // Override with URL hash marks if present
+            var hash = window.location.hash.replace(/^#/, "");
+            if (hash.indexOf("marks=") === 0) {
+                var hashMarks = hashToMarks(hash.substring(6));
+                if (Object.keys(hashMarks).length > 0) {
+                    // Merge hash marks into existing marks
+                    Object.keys(hashMarks).forEach(function(k) {
+                        state.marks[k] = true;
+                    });
+                    try { localStorage.setItem("teps_marks", JSON.stringify(state.marks)); } catch(e) {}
+                }
+            }
+
+            // Share marks button
+            document.getElementById("shareMarks").addEventListener("click", function() {
+                var encoded = marksToHash(state.marks);
+                var url = window.location.origin + window.location.pathname;
+                if (encoded) url += "#marks=" + encoded;
+                navigator.clipboard.writeText(url).then(function() {
+                    var btn = document.getElementById("shareMarks");
+                    btn.textContent = "Copied!";
+                    btn.classList.add("copied");
+                    setTimeout(function() {
+                        btn.textContent = "Share marks";
+                        btn.classList.remove("copied");
+                    }, 2000);
+                }).catch(function() {
+                    prompt("Copy this link:", url);
+                });
+            });
 
             // Restore auto-advance preference
             const saved = localStorage.getItem("teps_auto_advance");
@@ -1288,8 +1377,9 @@
             } else {
                 state.marks[key] = true;
             }
-            // Persist to localStorage
+            // Persist to localStorage and URL hash
             try { localStorage.setItem("teps_marks", JSON.stringify(state.marks)); } catch(e) {}
+            updateUrlHash();
             // Update button appearance
             var buttons = content.querySelectorAll(".q-btn");
             buttons.forEach(function(btn) {

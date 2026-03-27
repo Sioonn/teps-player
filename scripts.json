@@ -103,5 +103,17 @@
     "8": "W: It must be hard to make ends meet on a volunteer's stipend.\nM: __________________________\n(a) Yeah, I'm barely scraping by, to be honest.\n(b) True. I'm actually making a difference.\n(c) It means I don't have to supplement my income.\n(d) The work's not so bad once you get used to it.",
     "9": "M: I tried to patch things up with my girlfriend, but she wouldn't even hear me out.\nW: __________________________\n(a) Then maybe it's time to talk it over with her.\n(b) Well, that shows she's not ready to part ways.\n(c) Then just move on. You've done all you can.\n(d) You should've told her your side of the story.",
     "10": "W: The company should convert the spare meeting room into an employee lounge.\nM: __________________________\n(a) Agreed. Another meeting room would be nice.\n(b) Nice idea, but two meeting rooms aren't necessary.\n(c) Right. We rarely use the lounge anyway.\n(d) Yeah, we do need somewhere to unwind."
+  },
+  "test4": {
+    "1": "M: Excuse me. I'd like to try these jeans on.\nW: _________________________________\n(a) They're actually too big for me.\n(b) Sorry. All sales are final.\n(c) I'll show you some other items, then.\n(d) Sure. The fitting room's over there.",
+    "2": "W: I need to cut our meeting short. An emergency came up.\nM: _________________________________\n(a) No problem. Let's finish up later.\n(b) Thanks. I appreciate your concern.\n(c) OK. We'll start the meeting later.\n(d) Sorry. It won't happen again.",
+    "3": "M: You bought another guitar? You already had three!\nW: _________________________________\n(a) I couldn't help it. It was on sale.\n(b) I can tell how much you like guitars.\n(c) I don't know where to buy it.\n(d) I think three is finally enough.",
+    "4": "W: Want to go swimming with me again next weekend?\nM: _________________________________\n(a) Let's go next Saturday instead.\n(b) OK, I'll go on my own then.\n(c) I'd love to. I've never been.\n(d) I do, but I'll be out of town.",
+    "5": "M: Thanks for helping me move my stuff.\nW: _________________________________\n(a) I'm always happy to lend a hand.\n(b) I couldn't have done it without you.\n(c) I would've helped if I'd been able to.\n(d) I can manage by myself, thanks.",
+    "6": "W: This recipe doesn't say how much salt to use.\nM: _________________________________\n(a) Any type is probably fine.\n(b) A pinch should do it.\n(c) Then stick to the recipe.\n(d) It does taste a bit salty.",
+    "7": "M: I wish I hadn't bought these designer sunglasses.\nW: _________________________________\n(a) You can try returning them.\n(b) Yeah, I'd have paid even more for them.\n(c) I knew you'd regret not getting them.\n(d) Well, you'd better get a reputable brand.",
+    "8": "W: I used up all my savings on my last vacation.\nM: _________________________________\n(a) You still have a bit of unpaid leave, though.\n(b) I guess you were a little stingy.\n(c) It's not too late to splurge.\n(d) It's time to cut back your spending, then.",
+    "9": "M: Sorry for losing my temper at the meeting.\nW: _________________________________\n(a) Forget it. We were both on edge.\n(b) That's OK. It was an honest mistake.\n(c) Don't be. I'd have kept quiet, too.\n(d) I'm surprised you didn't lash out.",
+    "10": "W: Have you seen how disrespectful Jill is to her brother?\nM: _________________________________\n(a) Of course. He keeps getting away with it.\n(b) Yeah, I don't know how she puts up with him.\n(c) I know. She's totally out of line.\n(d) Well, he'd better not try that with me."
   }
 }

@@ -1632,13 +1632,19 @@
 
         function loadMarksFromDB() {
             return supaFetch("/marks?select=key")
-                .then(function(res) { return res.json(); })
+                .then(function(res) {
+                    if (!res.ok) throw new Error("Marks fetch failed: " + res.status);
+                    return res.json();
+                })
                 .then(function(rows) {
                     state.marks = {};
                     rows.forEach(function(r) { state.marks[r.key] = true; });
+                    // Retry refresh after short delay to catch late-rendered buttons
                     refreshMarkButtons();
+                    setTimeout(refreshMarkButtons, 500);
+                    setTimeout(refreshMarkButtons, 1500);
                 })
-                .catch(function() {});
+                .catch(function(e) { console.error("loadMarksFromDB error:", e); });
         }
 
         function addMarkToDB(key) {

@@ -115,5 +115,19 @@
     "8": "W: I used up all my savings on my last vacation.\nM: _________________________________\n(a) You still have a bit of unpaid leave, though.\n(b) I guess you were a little stingy.\n(c) It's not too late to splurge.\n(d) It's time to cut back your spending, then.",
     "9": "M: Sorry for losing my temper at the meeting.\nW: _________________________________\n(a) Forget it. We were both on edge.\n(b) That's OK. It was an honest mistake.\n(c) Don't be. I'd have kept quiet, too.\n(d) I'm surprised you didn't lash out.",
     "10": "W: Have you seen how disrespectful Jill is to her brother?\nM: _________________________________\n(a) Of course. He keeps getting away with it.\n(b) Yeah, I don't know how she puts up with him.\n(c) I know. She's totally out of line.\n(d) Well, he'd better not try that with me."
+  },
+  "test5": {
+    "1": "M: Is Jill back from Spain?\nW: _________________________\n(a) She'll be returning tomorrow.\n(b) Yeah, she lives there now.\n(c) She's been gone for a month.\n(d) Ask her when she arrives.",
+    "2": "W: Hi, I'm Tara. I recently moved in next door.\nM: _________________________\n(a) Actually, I met her already.\n(b) Sure, I'll help you move.\n(c) Welcome to the neighborhood!\n(d) Thanks for introducing me.",
+    "3": "M: Can I assist you with your baggage?\nW: _________________________\n(a) No thanks. I can handle it.\n(b) You really packed a lot.\n(c) We can share mine.\n(d) I'm happy to help out.",
+    "4": "W: Are you tired? Let me drive the rest of the way.\nM: _________________________\n(a) Yeah, I'll take over for you.\n(b) Just take a short nap, then.\n(c) Sure, just pull over there.\n(d) It's OK. We're almost there.",
+    "5": "M: Here's the $5 I owe you for coffee yesterday.\nW: _________________________\n(a) Thanks, I owe you one.\n(b) Let's go grab it now.\n(c) I'll pay it back soon.\n(d) Keep it. That was my treat.",
+    "6": "W: This winter's been unseasonably mild.\nM: _________________________\n(a) And it's supposed to get even colder.\n(b) It has been particularly harsh this year.\n(c) Yeah, it feels more like fall.\n(d) I know. Make sure to bundle up.",
+    "7": "M: Paul's always giving me unwanted advice!\nW: _________________________\n(a) I'm sure he appreciates it.\n(b) Just tell him to mind his own business.\n(c) He could be more receptive to your advice.\n(d) He knows you mean well.",
+    "8": "W: I'll fail biology if I miss another class.\nM: _________________________\n(a) Don't worry. I won't miss it.\n(b) You shouldn't drop out just yet.\n(c) But you're not excused from class.\n(d) Then start taking your attendance seriously.",
+    "9": "M: You should get Kelly's input on your proposal.\nW: _________________________\n(a) I'll run it by her later.\n(b) I've helped her enough already.\n(c) She hasn't implemented my comments yet.\n(d) She'd be grateful for the feedback.",
+    "10": "W: The critics have now derided each movie in the Ghost Town trilogy!\nM: _________________________\n(a) They should really reach a consensus.\n(b) At least they've been consistent in their appraisal.\n(c) That accounts for the high box office earnings.\n(d) The filmmakers are clearly pandering to them.",
+    "11": "M: Want to eat out tonight?\nW: Sure! There's nothing in my fridge anyway.\nM: How about Chinese or Italian food?\nW: _________________________\n(a) I'd be fine either way.\n(b) I don't have much of an appetite.\n(c) I'll see what ingredients I have.\n(d) I'll cook something Italian.",
+    "12": "W: I saw Ben's dance performance last night.\nM: Me, too. He's talented, right?\nW: Yes! Did you know he was that good?\nM: _________________________\n(a) No, I'm not as talented as he is.\n(b) I didn't until you told me about it.\n(c) Well, he's just being humble.\n(d) I was actually taken by surprise."
   }
 }

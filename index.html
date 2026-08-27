@@ -383,6 +383,33 @@
             background: #64748b;
         }
 
+        .question-marker::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            bottom: 24px;
+            padding: 4px 7px;
+            border-radius: 5px;
+            background: #1e293b;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateX(-50%) translateY(3px);
+            transition: opacity 0.12s, transform 0.12s, visibility 0.12s;
+        }
+
+        .question-marker:hover::before,
+        .question-marker:focus-visible::before {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
         .question-marker:hover::after,
         .question-marker.active::after {
             width: 3px;
@@ -2361,12 +2388,15 @@
         function startContinuousListening() {
             var config = getContinuousConfig();
             if (!config) return;
+            if (state.playlist) clearPlaylistGap();
 
+            var gapSeconds = 3;
             var starts = [];
             var total = 0;
             for (var i = 0; i < config.through; i++) {
                 starts.push(total);
                 total += config.durations[i];
+                if (i < config.through - 1) total += gapSeconds;
             }
 
             state.playlist = {
@@ -2375,7 +2405,11 @@
                 durations: config.durations.slice(0, config.through),
                 starts: starts,
                 totalDuration: total,
-                currentIndex: 0
+                currentIndex: 0,
+                gapDuration: gapSeconds,
+                gapTimer: null,
+                inGap: false,
+                gapPaused: false
             };
             clearSilenceMarkers();
             renderQuestionMarkers();
@@ -2387,6 +2421,7 @@
             var playlist = state.playlist;
             if (!playlist || !playlist.active || idx < 0 || idx >= playlist.files.length) return;
 
+            clearPlaylistGap();
             playlist.currentIndex = idx;
             state.currentQuestion = idx;
             var fileInfo = playlist.files[idx];
@@ -2424,6 +2459,7 @@
 
         function stopPlaylist() {
             if (!state.playlist) return;
+            clearPlaylistGap();
             state.playlist = null;
             clearQuestionMarkers();
             updateContinuousListenCard();
@@ -2440,8 +2476,8 @@
                 marker.className = "question-marker";
                 marker.style.left = (start / playlist.totalDuration * 100) + "%";
                 marker.setAttribute("data-question", idx);
+                marker.setAttribute("data-tooltip", (idx + 1) + "번");
                 marker.setAttribute("aria-label", "Q" + (idx + 1) + " 시작으로 이동");
-                marker.title = "Q" + (idx + 1) + " · " + formatTime(start);
                 marker.addEventListener("click", function (e) {
                     e.stopPropagation();
                     seekToPlaylistTime(playlist.starts[idx]);
@@ -2474,7 +2510,12 @@
                 var fileInfo = state.playlist.files[state.playlist.currentIndex];
                 btn.textContent = "↺ 1–30 처음부터 듣기";
                 btn.classList.add("active");
-                note.textContent = "Q" + fileInfo.label + " 재생 중 · 마커를 누르면 해당 문항으로 이동합니다.";
+                if (state.playlist.inGap) {
+                    var nextFile = state.playlist.files[state.playlist.gapTarget];
+                    note.textContent = "Q" + fileInfo.label + " → Q" + nextFile.label + " · 3초 텀";
+                } else {
+                    note.textContent = "Q" + fileInfo.label + " 재생 중 · 마커를 누르면 해당 문항으로 이동합니다.";
+                }
             } else {
                 btn.textContent = "▶ 1–30 전체 듣기";
                 btn.classList.remove("active");
@@ -2487,21 +2528,111 @@
             if (!playlist || !playlist.active) return;
             target = Math.max(0, Math.min(playlist.totalDuration, target));
 
+            var wasPlaying = playlist.inGap ? !playlist.gapPaused : (!state.audio.paused && !state.audio.ended);
+            clearPlaylistGap();
             var idx = playlist.files.length - 1;
-            for (var i = 0; i < playlist.starts.length - 1; i++) {
-                if (target < playlist.starts[i + 1]) {
+            var offset = playlist.durations[idx];
+            for (var i = 0; i < playlist.starts.length; i++) {
+                var trackEnd = playlist.starts[i] + playlist.durations[i];
+                if (target < trackEnd || i === playlist.starts.length - 1) {
                     idx = i;
+                    offset = Math.max(0, Math.min(target - playlist.starts[i], playlist.durations[i]));
+                    break;
+                }
+                if (target < playlist.starts[i + 1]) {
+                    idx = i + 1;
+                    offset = 0;
                     break;
                 }
             }
-            var offset = Math.min(target - playlist.starts[idx], playlist.durations[idx]);
-            var wasPlaying = !state.audio.paused && !state.audio.ended;
             if (idx === playlist.currentIndex) {
                 state.audio.currentTime = offset;
+                if (wasPlaying && state.audio.paused) state.audio.play().catch(function () {});
+                updatePlayPauseIcon(wasPlaying);
                 updatePlayerUI();
             } else {
                 playPlaylistTrack(idx, offset, wasPlaying);
             }
+        }
+
+        function beginPlaylistGap(nextIdx) {
+            var playlist = state.playlist;
+            if (!playlist || !playlist.active) return;
+            clearPlaylistGap();
+            playlist.inGap = true;
+            playlist.gapPaused = false;
+            playlist.gapTarget = nextIdx;
+            playlist.gapRemainingMs = playlist.gapDuration * 1000;
+            playlist.gapStartedAt = Date.now();
+            trackLabel.textContent = state.currentTest.displayName + " - Q" + playlist.files[playlist.currentIndex].label + "→Q" + playlist.files[nextIdx].label + " · 3초 텀";
+            updatePlayPauseIcon(true);
+            updateContinuousListenCard();
+            startPlaylistGapTimer();
+        }
+
+        function startPlaylistGapTimer() {
+            var playlist = state.playlist;
+            if (!playlist || !playlist.inGap || playlist.gapPaused) return;
+            if (playlist.gapTimer) clearInterval(playlist.gapTimer);
+            playlist.gapTimer = setInterval(tickPlaylistGap, 100);
+            tickPlaylistGap();
+        }
+
+        function tickPlaylistGap() {
+            var playlist = state.playlist;
+            if (!playlist || !playlist.inGap || playlist.gapPaused) return;
+            var elapsed = Date.now() - playlist.gapStartedAt;
+            var remaining = Math.max(0, playlist.gapRemainingMs - elapsed);
+            var gapElapsed = playlist.gapDuration - remaining / 1000;
+            var current = playlist.starts[playlist.currentIndex] + playlist.durations[playlist.currentIndex] + gapElapsed;
+            updatePlaylistTimelineUI(current);
+
+            if (remaining <= 0) {
+                var nextIdx = playlist.gapTarget;
+                clearPlaylistGap();
+                playPlaylistTrack(nextIdx, 0, true);
+            }
+        }
+
+        function pausePlaylistGap() {
+            var playlist = state.playlist;
+            if (!playlist || !playlist.inGap || playlist.gapPaused) return;
+            playlist.gapRemainingMs = Math.max(0, playlist.gapRemainingMs - (Date.now() - playlist.gapStartedAt));
+            playlist.gapPaused = true;
+            if (playlist.gapTimer) clearInterval(playlist.gapTimer);
+            playlist.gapTimer = null;
+            updatePlayPauseIcon(false);
+        }
+
+        function resumePlaylistGap() {
+            var playlist = state.playlist;
+            if (!playlist || !playlist.inGap || !playlist.gapPaused) return;
+            playlist.gapPaused = false;
+            playlist.gapStartedAt = Date.now();
+            updatePlayPauseIcon(true);
+            startPlaylistGapTimer();
+        }
+
+        function clearPlaylistGap() {
+            var playlist = state.playlist;
+            if (!playlist) return;
+            if (playlist.gapTimer) clearInterval(playlist.gapTimer);
+            playlist.gapTimer = null;
+            playlist.inGap = false;
+            playlist.gapPaused = false;
+            playlist.gapTarget = -1;
+            playlist.gapRemainingMs = 0;
+        }
+
+        function getPlaylistCurrentTime() {
+            var playlist = state.playlist;
+            if (!playlist || !playlist.active) return state.audio.currentTime;
+            if (!playlist.inGap) return playlist.starts[playlist.currentIndex] + state.audio.currentTime;
+
+            var elapsed = playlist.gapDuration * 1000 - playlist.gapRemainingMs;
+            if (!playlist.gapPaused) elapsed += Date.now() - playlist.gapStartedAt;
+            elapsed = Math.max(0, Math.min(playlist.gapDuration * 1000, elapsed));
+            return playlist.starts[playlist.currentIndex] + playlist.durations[playlist.currentIndex] + elapsed / 1000;
         }
 
         function showScript(label) {
@@ -2635,7 +2766,13 @@
                 return;
             }
 
-            if (state.playlist && state.playlist.active && state.audio.ended &&
+            if (state.playlist && state.playlist.active && state.playlist.inGap) {
+                if (state.playlist.gapPaused) {
+                    resumePlaylistGap();
+                } else {
+                    pausePlaylistGap();
+                }
+            } else if (state.playlist && state.playlist.active && state.audio.ended &&
                 state.playlist.currentIndex === state.playlist.files.length - 1) {
                 playPlaylistTrack(0, 0, true);
             } else if (state.audio.paused) {
@@ -2670,7 +2807,7 @@
         function seek(delta) {
             if (!state.audio.src || !isFinite(state.audio.duration)) return;
             if (state.playlist && state.playlist.active) {
-                var absolute = state.playlist.starts[state.playlist.currentIndex] + state.audio.currentTime;
+                var absolute = getPlaylistCurrentTime();
                 seekToPlaylistTime(absolute + delta);
                 return;
             }
@@ -2685,9 +2822,14 @@
             var current = state.audio.currentTime;
             var duration = state.audio.duration;
             if (state.playlist && state.playlist.active) {
-                current = state.playlist.starts[state.playlist.currentIndex] + current;
+                current = getPlaylistCurrentTime();
                 duration = state.playlist.totalDuration;
             }
+            updatePlaylistTimelineUI(current, duration);
+        }
+
+        function updatePlaylistTimelineUI(current, duration) {
+            duration = duration || (state.playlist && state.playlist.totalDuration) || state.audio.duration;
             var pct = (current / duration) * 100;
             progressFill.style.width = pct + "%";
             timeDisplay.textContent = formatTime(current) + " / " + formatTime(duration);
@@ -2706,7 +2848,7 @@
 
             if (state.playlist && state.playlist.active) {
                 if (state.playlist.currentIndex < state.playlist.files.length - 1) {
-                    playPlaylistTrack(state.playlist.currentIndex + 1, 0, true);
+                    beginPlaylistGap(state.playlist.currentIndex + 1);
                 } else {
                     progressFill.style.width = "100%";
                     timeDisplay.textContent = formatTime(state.playlist.totalDuration) + " / " + formatTime(state.playlist.totalDuration);

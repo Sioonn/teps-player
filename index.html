@@ -125,13 +125,46 @@
             display: block;
         }
 
+        .script-panel .script-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
         .script-panel .script-title {
             font-weight: 600;
             font-size: 15px;
             color: #1e293b;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .script-toggle {
+            flex-shrink: 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 6px 10px;
+            background: #f8fafc;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .script-toggle:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .script-panel .script-body {
+            display: none;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .script-panel.expanded .script-body {
+            display: block;
         }
 
         .script-panel .script-body .choice {
@@ -819,7 +852,10 @@
         <div class="content" id="content">
             <div class="placeholder-msg">Select a test from the sidebar to begin.</div>
             <div class="script-panel" id="scriptPanel">
-                <div class="script-title" id="scriptTitle"></div>
+                <div class="script-header">
+                    <div class="script-title" id="scriptTitle"></div>
+                    <button class="script-toggle" id="scriptToggle" type="button" aria-controls="scriptBody" aria-expanded="false">스크립트 보기</button>
+                </div>
                 <div class="script-body" id="scriptBody"></div>
             </div>
         </div>
@@ -2217,13 +2253,13 @@
 
         function renderQuestions() {
             if (!state.currentTest) {
-                content.innerHTML = '<div class="placeholder-msg">Select a test from the sidebar to begin.</div><div class="script-panel" id="scriptPanel"><div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div></div>';
+                content.innerHTML = '<div class="placeholder-msg">Select a test from the sidebar to begin.</div>';
                 return;
             }
 
             var files = state.currentTest.files || [];
             if (files.length === 0) {
-                content.innerHTML = '<div class="placeholder-msg">No questions available for this test. Run split.py to generate segments.</div><div class="script-panel" id="scriptPanel"><div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div></div>';
+                content.innerHTML = '<div class="placeholder-msg">No questions available for this test. Run split.py to generate segments.</div>';
                 return;
             }
 
@@ -2253,7 +2289,7 @@
             var sp = document.createElement("div");
             sp.className = "script-panel";
             sp.id = "scriptPanel";
-            sp.innerHTML = '<div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div>';
+            sp.innerHTML = '<div class="script-header"><div class="script-title" id="scriptTitle"></div><button class="script-toggle" id="scriptToggle" type="button" aria-controls="scriptBody" aria-expanded="false">스크립트 보기</button></div><div class="script-body" id="scriptBody"></div>';
             content.appendChild(sp);
             updateContinuousListenCard();
         }
@@ -2472,6 +2508,7 @@
             var panel = document.getElementById("scriptPanel");
             var title = document.getElementById("scriptTitle");
             var body = document.getElementById("scriptBody");
+            var toggle = document.getElementById("scriptToggle");
             if (!panel) return;
 
             // For labels like "37-38", look up both individual question scripts
@@ -2500,9 +2537,18 @@
                 state.currentScriptText = scriptText;
                 state.currentScriptLabel = label;
                 renderScriptWithHighlights(body, scriptText, label);
+                panel.classList.remove("expanded");
+                toggle.textContent = "스크립트 보기";
+                toggle.setAttribute("aria-expanded", "false");
+                toggle.onclick = function () {
+                    var expanded = panel.classList.toggle("expanded");
+                    toggle.textContent = expanded ? "스크립트 숨기기" : "스크립트 보기";
+                    toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+                };
                 panel.classList.add("visible");
             } else {
                 panel.classList.remove("visible");
+                panel.classList.remove("expanded");
             }
         }
 

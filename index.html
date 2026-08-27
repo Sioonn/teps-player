@@ -195,6 +195,38 @@
             color: #fff;
         }
 
+        .continuous-listen-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            background: #eff6ff;
+        }
+
+        .continuous-listen-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .continuous-listen-btn:hover { background: #1d4ed8; }
+        .continuous-listen-btn.active { background: #0f766e; }
+
+        .continuous-listen-note {
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
 
         /* Player bar */
         .player-bar {
@@ -292,6 +324,36 @@
             z-index: 2;
             pointer-events: none;
             min-width: 2px;
+        }
+
+        .question-marker {
+            position: absolute;
+            top: -7px;
+            width: 12px;
+            height: 22px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            transform: translateX(-50%);
+            z-index: 3;
+        }
+
+        .question-marker::after {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 3px;
+            width: 2px;
+            height: 16px;
+            border-radius: 1px;
+            background: #64748b;
+        }
+
+        .question-marker:hover::after,
+        .question-marker.active::after {
+            width: 3px;
+            background: #f97316;
         }
 
         .time-display {
@@ -727,6 +789,13 @@
                 width: 44px;
                 height: 44px;
                 font-size: 13px;
+            }
+
+            .continuous-listen-card {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px;
             }
         }
     </style>
@@ -1427,6 +1496,10 @@
               "name": "test4",
               "displayName": "Test 4",
               "path": "script/test4",
+              "continuousListening": {
+                "through": 30,
+                "durations": [58.609, 21.569, 21.243, 20.638, 19.754, 19.343, 20.977, 20.681, 21.394, 22.446, 42.361, 23.341, 24.844, 21.194, 27.539, 28.177, 26.167, 26.142, 29.419, 25.74, 71.914, 48.168, 47.571, 47.381, 54.014, 58.502, 47.585, 54.738, 47.466, 53.993]
+              },
               "files": [
                 {
                   "file": "01.mp3",
@@ -1586,6 +1659,10 @@
               "name": "test5",
               "displayName": "Test 5",
               "path": "script/test5",
+              "continuousListening": {
+                "through": 30,
+                "durations": [55.224, 19.364, 17.701, 20.224, 19.377, 20.914, 20.724, 20.732, 20.109, 22.467, 40.011, 26.113, 27.626, 26.453, 23.827, 26.037, 27.676, 29.492, 26.01, 32.262, 72.791, 44.662, 52.897, 43.852, 45.841, 45.474, 50.228, 57.787, 51.022, 50.094]
+              },
               "files": [
                 {
                   "file": "01.mp3",
@@ -1755,7 +1832,8 @@
             marks: {},   // key: "testName:idx" → true
             highlights: {},  // key: scriptKey → [{id, start, end}]
             currentScriptText: "",
-            currentScriptLabel: ""
+            currentScriptLabel: "",
+            playlist: null
         };
 
         // DOM refs
@@ -2006,7 +2084,11 @@
                 var rect = progressBar.getBoundingClientRect();
                 var ratio = (e.clientX - rect.left) / rect.width;
                 ratio = Math.max(0, Math.min(1, ratio));
-                state.audio.currentTime = ratio * state.audio.duration;
+                if (state.playlist && state.playlist.active) {
+                    seekToPlaylistTime(ratio * state.playlist.totalDuration);
+                } else {
+                    state.audio.currentTime = ratio * state.audio.duration;
+                }
             });
 
             // Keyboard shortcuts
@@ -2121,6 +2203,7 @@
 
             state.currentTest = test;
             state.currentQuestion = -1;
+            stopPlaylist();
             state.audio.pause();
             state.audio.src = "";
             updatePlayPauseIcon(false);
@@ -2145,6 +2228,15 @@
             }
 
             content.innerHTML = "";
+            if (getContinuousConfig()) {
+                var continuousCard = document.createElement("div");
+                continuousCard.className = "continuous-listen-card";
+                continuousCard.innerHTML =
+                    '<button class="continuous-listen-btn" id="continuousListenBtn" type="button">\u25b6 1–30 전체 듣기</button>' +
+                    '<div class="continuous-listen-note" id="continuousListenNote">1번부터 30번까지 이어서 재생합니다. 재생바의 마커를 누르면 해당 문항으로 이동합니다.</div>';
+                content.appendChild(continuousCard);
+                document.getElementById("continuousListenBtn").addEventListener("click", startContinuousListening);
+            }
             var grid = document.createElement("div");
             grid.className = "question-grid";
             for (var i = 0; i < files.length; i++) {
@@ -2163,6 +2255,7 @@
             sp.id = "scriptPanel";
             sp.innerHTML = '<div class="script-title" id="scriptTitle"></div><div class="script-body" id="scriptBody"></div>';
             content.appendChild(sp);
+            updateContinuousListenCard();
         }
 
         function markKey(idx) {
@@ -2205,6 +2298,7 @@
             var files = state.currentTest ? state.currentTest.files || [] : [];
             if (idx < 0 || idx >= files.length) return;
 
+            stopPlaylist();
             state.currentQuestion = idx;
 
             var fileInfo = files[idx];
@@ -2219,6 +2313,159 @@
             clearSilenceMarkers();
             detectSilences(src);
             showScript(fileInfo.label);
+        }
+
+        function getContinuousConfig() {
+            var config = state.currentTest && state.currentTest.continuousListening;
+            if (!config || !config.through || !config.durations) return null;
+            if (config.durations.length < config.through) return null;
+            return config;
+        }
+
+        function startContinuousListening() {
+            var config = getContinuousConfig();
+            if (!config) return;
+
+            var starts = [];
+            var total = 0;
+            for (var i = 0; i < config.through; i++) {
+                starts.push(total);
+                total += config.durations[i];
+            }
+
+            state.playlist = {
+                active: true,
+                files: (state.currentTest.files || []).slice(0, config.through),
+                durations: config.durations.slice(0, config.through),
+                starts: starts,
+                totalDuration: total,
+                currentIndex: 0
+            };
+            clearSilenceMarkers();
+            renderQuestionMarkers();
+            updateContinuousListenCard();
+            playPlaylistTrack(0, 0, true);
+        }
+
+        function playPlaylistTrack(idx, offset, autoplay) {
+            var playlist = state.playlist;
+            if (!playlist || !playlist.active || idx < 0 || idx >= playlist.files.length) return;
+
+            playlist.currentIndex = idx;
+            state.currentQuestion = idx;
+            var fileInfo = playlist.files[idx];
+            var src = state.currentTest.path + "/" + fileInfo.file;
+            state.audio.src = src;
+            state.audio.playbackRate = state.playbackRate;
+
+            if (offset > 0) {
+                state.audio.addEventListener("loadedmetadata", function setPlaylistOffset() {
+                    state.audio.currentTime = Math.min(offset, state.audio.duration || offset);
+                }, { once: true });
+            }
+            if (autoplay) {
+                state.audio.play().catch(function () {});
+            }
+
+            if (idx < playlist.files.length - 1) {
+                var nextFile = playlist.files[idx + 1];
+                var preloader = new Audio();
+                preloader.preload = "auto";
+                preloader.src = state.currentTest.path + "/" + nextFile.file;
+                preloader.load();
+                playlist.preloader = preloader;
+            } else {
+                playlist.preloader = null;
+            }
+
+            trackLabel.textContent = state.currentTest.displayName + " - 전체 Q" + fileInfo.label + "/30";
+            updatePlayPauseIcon(autoplay);
+            highlightActiveButton();
+            updateQuestionMarkerState();
+            updateContinuousListenCard();
+            showScript(fileInfo.label);
+        }
+
+        function stopPlaylist() {
+            if (!state.playlist) return;
+            state.playlist = null;
+            clearQuestionMarkers();
+            updateContinuousListenCard();
+        }
+
+        function renderQuestionMarkers() {
+            clearQuestionMarkers();
+            var playlist = state.playlist;
+            if (!playlist || !playlist.active || !playlist.totalDuration) return;
+
+            playlist.starts.forEach(function (start, idx) {
+                var marker = document.createElement("button");
+                marker.type = "button";
+                marker.className = "question-marker";
+                marker.style.left = (start / playlist.totalDuration * 100) + "%";
+                marker.setAttribute("data-question", idx);
+                marker.setAttribute("aria-label", "Q" + (idx + 1) + " 시작으로 이동");
+                marker.title = "Q" + (idx + 1) + " · " + formatTime(start);
+                marker.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    seekToPlaylistTime(playlist.starts[idx]);
+                });
+                progressBar.appendChild(marker);
+            });
+            updateQuestionMarkerState();
+        }
+
+        function clearQuestionMarkers() {
+            var markers = progressBar.querySelectorAll(".question-marker");
+            for (var i = 0; i < markers.length; i++) markers[i].remove();
+        }
+
+        function updateQuestionMarkerState() {
+            var playlist = state.playlist;
+            var markers = progressBar.querySelectorAll(".question-marker");
+            for (var i = 0; i < markers.length; i++) {
+                var idx = parseInt(markers[i].getAttribute("data-question"), 10);
+                markers[i].classList.toggle("active", !!playlist && idx === playlist.currentIndex);
+            }
+        }
+
+        function updateContinuousListenCard() {
+            var btn = document.getElementById("continuousListenBtn");
+            var note = document.getElementById("continuousListenNote");
+            if (!btn || !note) return;
+
+            if (state.playlist && state.playlist.active) {
+                var fileInfo = state.playlist.files[state.playlist.currentIndex];
+                btn.textContent = "↺ 1–30 처음부터 듣기";
+                btn.classList.add("active");
+                note.textContent = "Q" + fileInfo.label + " 재생 중 · 마커를 누르면 해당 문항으로 이동합니다.";
+            } else {
+                btn.textContent = "▶ 1–30 전체 듣기";
+                btn.classList.remove("active");
+                note.textContent = "1번부터 30번까지 이어서 재생합니다. 재생바의 마커를 누르면 해당 문항으로 이동합니다.";
+            }
+        }
+
+        function seekToPlaylistTime(target) {
+            var playlist = state.playlist;
+            if (!playlist || !playlist.active) return;
+            target = Math.max(0, Math.min(playlist.totalDuration, target));
+
+            var idx = playlist.files.length - 1;
+            for (var i = 0; i < playlist.starts.length - 1; i++) {
+                if (target < playlist.starts[i + 1]) {
+                    idx = i;
+                    break;
+                }
+            }
+            var offset = Math.min(target - playlist.starts[idx], playlist.durations[idx]);
+            var wasPlaying = !state.audio.paused && !state.audio.ended;
+            if (idx === playlist.currentIndex) {
+                state.audio.currentTime = offset;
+                updatePlayerUI();
+            } else {
+                playPlaylistTrack(idx, offset, wasPlaying);
+            }
         }
 
         function showScript(label) {
@@ -2342,7 +2589,10 @@
                 return;
             }
 
-            if (state.audio.paused) {
+            if (state.playlist && state.playlist.active && state.audio.ended &&
+                state.playlist.currentIndex === state.playlist.files.length - 1) {
+                playPlaylistTrack(0, 0, true);
+            } else if (state.audio.paused) {
                 state.audio.play().catch(function () {});
                 updatePlayPauseIcon(true);
             } else {
@@ -2373,6 +2623,11 @@
 
         function seek(delta) {
             if (!state.audio.src || !isFinite(state.audio.duration)) return;
+            if (state.playlist && state.playlist.active) {
+                var absolute = state.playlist.starts[state.playlist.currentIndex] + state.audio.currentTime;
+                seekToPlaylistTime(absolute + delta);
+                return;
+            }
             state.audio.currentTime = Math.max(
                 0,
                 Math.min(state.audio.duration, state.audio.currentTime + delta)
@@ -2383,6 +2638,10 @@
             if (!isFinite(state.audio.duration)) return;
             var current = state.audio.currentTime;
             var duration = state.audio.duration;
+            if (state.playlist && state.playlist.active) {
+                current = state.playlist.starts[state.playlist.currentIndex] + current;
+                duration = state.playlist.totalDuration;
+            }
             var pct = (current / duration) * 100;
             progressFill.style.width = pct + "%";
             timeDisplay.textContent = formatTime(current) + " / " + formatTime(duration);
@@ -2398,6 +2657,18 @@
 
         function onTrackEnded() {
             updatePlayPauseIcon(false);
+
+            if (state.playlist && state.playlist.active) {
+                if (state.playlist.currentIndex < state.playlist.files.length - 1) {
+                    playPlaylistTrack(state.playlist.currentIndex + 1, 0, true);
+                } else {
+                    progressFill.style.width = "100%";
+                    timeDisplay.textContent = formatTime(state.playlist.totalDuration) + " / " + formatTime(state.playlist.totalDuration);
+                    updateContinuousListenCard();
+                }
+                return;
+            }
+
             progressFill.style.width = "0%";
 
             var files = state.currentTest ? state.currentTest.files || [] : [];

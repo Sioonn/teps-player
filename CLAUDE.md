@@ -145,5 +145,6 @@ git push
 - **배속**: 위/아래 방향키 또는 ▲▼ 버튼 (0.1 단위)
 - **Seek**: 좌/우 방향키 또는 -3/+3 버튼
 - **Auto advance**: 체크 시 다음 문제 자동 재생
+- **Continuous listening**: Test 4/5에서 Q1–30을 하나의 타임라인으로 이어 재생. `manifest.json`의 `continuousListening.durations`로 문항 시작 마커 위치를 계산
 - **Silence markers**: 재생바에 회색으로 묵음 구간 표시 (Web Audio API)
 - **모바일**: 햄버거 메뉴 (헤더 내), 2줄 재생바, 100dvh 레이아웃

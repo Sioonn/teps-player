@@ -183,6 +183,31 @@
             background: #fde047;
         }
 
+        .selection-highlight-action {
+            position: fixed;
+            z-index: 3000;
+            display: none;
+            padding: 7px 11px;
+            border: 1px solid #f59e0b;
+            border-radius: 7px;
+            background: #fff;
+            color: #92400e;
+            box-shadow: 0 5px 16px rgba(15, 23, 42, 0.2);
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.2;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .selection-highlight-action.visible {
+            display: block;
+        }
+
+        .selection-highlight-action:hover {
+            background: #fef3c7;
+        }
+
         .question-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(48px, 48px));
@@ -911,6 +936,8 @@
             </label>
         </div>
     </div>
+
+    <button class="selection-highlight-action" id="highlightSelectionAction" type="button" aria-hidden="true">강조하기</button>
 
     <script>
     (function () {
@@ -1899,6 +1926,11 @@
             playlist: null
         };
 
+        // Browser checks on a local development server must never play sound.
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+            state.audio.muted = true;
+        }
+
         // DOM refs
         const scriptPanel = document.getElementById("scriptPanel");
         const scriptTitle = document.getElementById("scriptTitle");
@@ -2068,13 +2100,66 @@
             loadMarksFromDB();
             loadHighlightsFromDB();
 
-            // Highlight selection handler
-            function handleHighlightSelection(e) {
+            // Show an explicit action after selecting script text.
+            var pendingHighlight = null;
+            var highlightAction = document.getElementById("highlightSelectionAction");
+
+            function hideHighlightAction() {
+                pendingHighlight = null;
+                highlightAction.classList.remove("visible");
+                highlightAction.setAttribute("aria-hidden", "true");
+            }
+
+            function getSelectedHighlightRange() {
                 var body = document.getElementById("scriptBody");
-                if (!body || !state.currentScriptText) return;
+                if (!body || !state.currentScriptText) return null;
 
                 var sel = window.getSelection();
-                if (!sel || sel.isCollapsed) {
+                if (!sel || sel.isCollapsed || sel.rangeCount === 0) return null;
+                if (!body.contains(sel.anchorNode) || !body.contains(sel.focusNode)) return null;
+
+                var start = getTextOffset(body, sel.anchorNode, sel.anchorOffset);
+                var end = getTextOffset(body, sel.focusNode, sel.focusOffset);
+                if (start === -1 || end === -1) return null;
+                if (start > end) { var tmp = start; start = end; end = tmp; }
+                if (start === end) return null;
+
+                return {
+                    key: highlightKey(state.currentScriptLabel),
+                    start: start,
+                    end: end,
+                    rect: sel.getRangeAt(0).getBoundingClientRect()
+                };
+            }
+
+            function showHighlightAction(rangeInfo) {
+                pendingHighlight = rangeInfo;
+                highlightAction.classList.add("visible");
+                highlightAction.setAttribute("aria-hidden", "false");
+
+                var width = highlightAction.offsetWidth;
+                var height = highlightAction.offsetHeight;
+                var left = rangeInfo.rect.left + rangeInfo.rect.width / 2 - width / 2;
+                var top = rangeInfo.rect.top - height - 8;
+                if (top < 8) top = rangeInfo.rect.bottom + 8;
+                left = Math.max(8, Math.min(window.innerWidth - width - 8, left));
+                top = Math.max(8, Math.min(window.innerHeight - height - 8, top));
+                highlightAction.style.left = left + "px";
+                highlightAction.style.top = top + "px";
+            }
+
+            function handleHighlightSelection(e) {
+                if (e.type === "mouseup" && e.button !== 0) return;
+                if (highlightAction.contains(e.target)) return;
+                var body = document.getElementById("scriptBody");
+                if (!body || !body.contains(e.target)) {
+                    hideHighlightAction();
+                    return;
+                }
+
+                var rangeInfo = getSelectedHighlightRange();
+                if (!rangeInfo) {
+                    hideHighlightAction();
                     // Check if clicked on existing <mark> to remove it
                     var target = e.target;
                     if (target.tagName === "MARK" && target.dataset.ids) {
@@ -2091,25 +2176,40 @@
                     return;
                 }
 
-                if (!body.contains(sel.anchorNode) || !body.contains(sel.focusNode)) return;
-
-                var start = getTextOffset(body, sel.anchorNode, sel.anchorOffset);
-                var end = getTextOffset(body, sel.focusNode, sel.focusOffset);
-                if (start === -1 || end === -1) return;
-                if (start > end) { var tmp = start; start = end; end = tmp; }
-                if (start === end) return;
-
-                var key = highlightKey(state.currentScriptLabel);
-                addHighlightToDB(key, start, end).then(function(row) {
-                    if (!row) return;
-                    if (!state.highlights[key]) state.highlights[key] = [];
-                    state.highlights[key].push({ id: row.id, start: start, end: end });
-                    rerenderCurrentScript();
-                    sel.removeAllRanges();
-                });
+                showHighlightAction(rangeInfo);
             }
+
+            highlightAction.addEventListener("mousedown", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            highlightAction.addEventListener("click", function(e) {
+                e.stopPropagation();
+                if (!pendingHighlight) return;
+                var rangeInfo = pendingHighlight;
+                hideHighlightAction();
+                addHighlightToDB(rangeInfo.key, rangeInfo.start, rangeInfo.end).then(function(row) {
+                    if (!row) return;
+                    if (!state.highlights[rangeInfo.key]) state.highlights[rangeInfo.key] = [];
+                    state.highlights[rangeInfo.key].push({ id: row.id, start: rangeInfo.start, end: rangeInfo.end });
+                    rerenderCurrentScript();
+                    var sel = window.getSelection();
+                    if (sel) sel.removeAllRanges();
+                });
+            });
             document.addEventListener("mouseup", handleHighlightSelection);
             document.addEventListener("touchend", handleHighlightSelection);
+            document.addEventListener("mousedown", function(e) {
+                if (!highlightAction.contains(e.target)) hideHighlightAction();
+            });
+            document.addEventListener("selectionchange", function() {
+                var sel = window.getSelection();
+                if (!sel || sel.isCollapsed) hideHighlightAction();
+            });
+            document.addEventListener("keydown", function(e) {
+                if (e.key === "Escape") hideHighlightAction();
+            });
+            document.addEventListener("scroll", hideHighlightAction, true);
 
             // Hamburger menu toggle
             var hamburger = document.getElementById("hamburger");

@@ -146,6 +146,6 @@ git push
 - **Seek**: 좌/우 방향키 또는 -3/+3 버튼
 - **Auto advance**: 체크 시 다음 문제 자동 재생
 - **Continuous listening**: Test 4/5에서 Q1–30을 하나의 타임라인으로 이어 재생하고 문항 사이에 3초 텀을 삽입. `manifest.json`의 `continuousListening.durations`로 문항 시작 마커 위치를 계산하며, 마커 호버 시 문항 번호를 표시
-- **Script toggle**: 문항 선택 시 스크립트 본문은 기본 숨김. `스크립트 보기`로 펼치고 문항이 바뀌면 다시 숨김
+- **Script toggle/highlight**: 문항 선택 시 스크립트 본문은 기본 숨김. `스크립트 보기`로 펼치고 문항이 바뀌면 다시 숨김. 본문 텍스트를 드래그하면 `강조하기` 버튼을 표시하고 클릭 시 Supabase에 강조 범위를 저장
 - **Silence markers**: 재생바에 회색으로 묵음 구간 표시 (Web Audio API)
 - **모바일**: 햄버거 메뉴 (헤더 내), 2줄 재생바, 100dvh 레이아웃
